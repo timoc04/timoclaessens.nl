@@ -13,11 +13,12 @@
 </head>
 <body>
 
-    <div class="background-glow"></div>
+    <div class="page-glow page-glow-blue"></div>
+    <div class="page-glow page-glow-purple"></div>
 
     <header class="hero">
         <nav class="navbar">
-            <div class="logo">Timo Claessens</div>
+            <a href="#" class="logo">Timo Claessens</a>
 
             <div class="nav-links">
                 <a href="#projects">Projects</a>
@@ -43,36 +44,49 @@
                 </p>
 
                 <div class="hero-buttons">
-                    <a href="#projects" class="btn-primary">View projects</a>
-                    <a href="mailto:info@timoclaessens.nl" class="btn-secondary">Contact me</a>
+                    <a href="#projects" class="btn-primary">View projects →</a>
+                    <a href="mailto:info@timoclaessens.nl" class="btn-secondary">Contact me ✉</a>
                 </div>
             </div>
 
             <div class="terminal-card">
                 <div class="terminal-bar">
-                    <span class="dot red"></span>
-                    <span class="dot yellow"></span>
-                    <span class="dot green"></span>
+                    <span class="terminal-dot red"></span>
+                    <span class="terminal-dot yellow"></span>
+                    <span class="terminal-dot green"></span>
                 </div>
 
                 <div class="terminal-body">
-                    <p><span class="prompt">$</span> <span class="command">whoami</span></p>
-                    <p><span class="output">timo-claessens</span></p>
-
-                    <br>
-
-                    <p><span class="prompt">$</span> <span class="command">focus --list</span></p>
-                    <p><span class="success">✓</span> infrastructure</p>
-                    <p><span class="success">✓</span> automation</p>
-                    <p><span class="success">✓</span> cloud</p>
-                    <p><span class="success">✓</span> homelab</p>
-
-                    <br>
-
-                    <p><span class="prompt">$</span> <span class="command">status</span></p>
                     <p>
-                        <span class="info">building</span>
-                        <span class="output">practical IT solutions...</span>
+                        <span class="terminal-user">timo@portfolio</span><span class="terminal-path">:~$</span>
+                        <span class="terminal-command">whoami</span>
+                    </p>
+                    <p class="terminal-output">timo-claessens</p>
+
+                    <br>
+
+                    <p>
+                        <span class="terminal-user">timo@portfolio</span><span class="terminal-path">:~$</span>
+                        <span class="terminal-command">focus</span>
+                    </p>
+                    <p class="terminal-output">infrastructure</p>
+                    <p class="terminal-output">automation</p>
+                    <p class="terminal-output">cloud</p>
+                    <p class="terminal-output">homelab</p>
+
+                    <br>
+
+                    <p>
+                        <span class="terminal-user">timo@portfolio</span><span class="terminal-path">:~$</span>
+                        <span class="terminal-command purple">status</span>
+                    </p>
+                    <p class="terminal-output">building practical IT solutions...</p>
+
+                    <br>
+
+                    <p>
+                        <span class="terminal-user">timo@portfolio</span><span class="terminal-path">:~$</span>
+                        <span class="terminal-cursor">_</span>
                     </p>
                 </div>
             </div>
@@ -94,7 +108,7 @@
             <div class="project-grid">
 
                 <article class="project-card">
-                    <span class="project-badge">API</span>
+                    <span class="project-badge blue">API</span>
 
                     <h3>Monitoring API</h3>
 
@@ -116,7 +130,7 @@
                 </article>
 
                 <article class="project-card">
-                    <span class="project-badge">Signage</span>
+                    <span class="project-badge purple">Signage</span>
 
                     <h3>Digital Signage</h3>
 
@@ -138,7 +152,7 @@
                 </article>
 
                 <article class="project-card">
-                    <span class="project-badge">Scripts</span>
+                    <span class="project-badge yellow">Scripts</span>
 
                     <h3>Automation Scripts</h3>
 
@@ -160,7 +174,7 @@
                 </article>
 
                 <article class="project-card">
-                    <span class="project-badge">Homelab</span>
+                    <span class="project-badge green">Homelab</span>
 
                     <h3>Homelab Environment</h3>
 
@@ -196,8 +210,8 @@
 
             <div class="focus-grid">
 
-                <div class="focus-card">
-                    <div class="focus-icon">☁</div>
+                <article class="focus-card">
+                    <div class="focus-icon icon-blue">☁</div>
 
                     <h3>Cloud & Infrastructure</h3>
 
@@ -205,10 +219,10 @@
                         Azure, networking, virtualisation,
                         Linux and hybrid infrastructure solutions.
                     </p>
-                </div>
+                </article>
 
-                <div class="focus-card">
-                    <div class="focus-icon">⚙</div>
+                <article class="focus-card">
+                    <div class="focus-icon icon-purple">⚙</div>
 
                     <h3>Automation</h3>
 
@@ -216,10 +230,10 @@
                         Creating tools and workflows that improve
                         efficiency and simplify management.
                     </p>
-                </div>
+                </article>
 
-                <div class="focus-card">
-                    <div class="focus-icon">⌂</div>
+                <article class="focus-card">
+                    <div class="focus-icon icon-green">⌂</div>
 
                     <h3>Homelab</h3>
 
@@ -227,18 +241,18 @@
                         Building and experimenting with servers,
                         monitoring, VPNs and self-hosted platforms.
                     </p>
-                </div>
+                </article>
 
-                <div class="focus-card">
-                    <div class="focus-icon">⌨</div>
+                <article class="focus-card">
+                    <div class="focus-icon icon-yellow">⌨</div>
 
                     <h3>Scripting & Tools</h3>
 
                     <p>
-                        Writing scripts and small tools to automate tasks,
-                        test systems and support practical IT work.
+                        Writing scripts and small tools for automation,
+                        system management and daily productivity.
                     </p>
-                </div>
+                </article>
 
             </div>
         </section>
