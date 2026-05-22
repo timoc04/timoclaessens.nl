@@ -1,0 +1,162 @@
+:root {
+    --bg: #050816;
+    --surface: rgba(17, 24, 39, 0.75);
+    --border: rgba(255, 255, 255, 0.08);
+    --text: #f5f7ff;
+    --muted: #a6adc8;
+    --primary: #7c5cff;
+    --secondary: #00c2ff;
+    --shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Inter, sans-serif;
+    background:
+        radial-gradient(circle at top left, rgba(124, 92, 255, 0.15), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(0, 194, 255, 0.12), transparent 30%),
+        var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+}
+
+.navbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    background: rgba(5, 8, 22, 0.7);
+    z-index: 100;
+}
+
+.logo {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+nav {
+    display: flex;
+    gap: 1.5rem;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--muted);
+    transition: 0.2s ease;
+}
+
+nav a:hover,
+nav a.active {
+    color: var(--text);
+}
+
+.container {
+    width: 100%;
+    max-width: 950px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 5rem;
+}
+
+.hero {
+    margin-bottom: 3rem;
+}
+
+.tag {
+    color: var(--secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.hero h1 {
+    font-size: clamp(2.5rem, 7vw, 4.5rem);
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(90deg, var(--text), #a5b4fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.intro {
+    max-width: 750px;
+    color: var(--muted);
+    font-size: 1.1rem;
+}
+
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(14px);
+    box-shadow: var(--shadow);
+}
+
+.card h2 {
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+}
+
+.card p {
+    color: var(--muted);
+    margin-bottom: 1rem;
+}
+
+.card ul {
+    padding-left: 1.2rem;
+    color: var(--muted);
+    margin-bottom: 1rem;
+}
+
+.card li {
+    margin-bottom: 0.5rem;
+}
+
+.email {
+    display: inline-block;
+    margin-top: 0.5rem;
+    color: var(--secondary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.email:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1.2rem;
+    }
+
+    nav {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .container {
+        padding-top: 3rem;
+    }
+
+    .card {
+        padding: 1.5rem;
+    }
+}
+
+will automatically open the privacy page.
