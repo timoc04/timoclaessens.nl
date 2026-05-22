@@ -9,8 +9,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -28,38 +27,63 @@
         </nav>
 
         <div class="hero-content">
-            <span class="hero-tag">
-                HBO ICT Student • Infrastructure • Automation
-            </span>
+            <div class="hero-text">
+                <span class="hero-tag">
+                    HBO ICT Student • Infrastructure • Automation
+                </span>
 
-            <h1>
-                Building practical IT solutions,
-                automation tools and modern infrastructure.
-            </h1>
+                <h1>
+                    Building practical IT solutions,
+                    <span>automation tools</span> and modern infrastructure.
+                </h1>
 
-            <p>
-                I enjoy creating reliable systems, automation projects,
-                cloud solutions and practical tools that solve real-world problems.
-            </p>
+                <p>
+                    I enjoy creating reliable systems, automation projects,
+                    cloud solutions and practical tools that solve real-world problems.
+                </p>
 
-            <div class="hero-buttons">
-                <a href="#projects" class="btn-primary">View projects</a>
-                <a href="mailto:info@timoclaessens.nl" class="btn-secondary">
-                    Contact me
-                </a>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn-primary">View projects</a>
+                    <a href="mailto:info@timoclaessens.nl" class="btn-secondary">Contact me</a>
+                </div>
+            </div>
+
+            <div class="terminal-card">
+                <div class="terminal-bar">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                </div>
+
+                <div class="terminal-body">
+                    <p><span class="prompt">$</span> <span class="command">whoami</span></p>
+                    <p><span class="output">timo-claessens</span></p>
+
+                    <br>
+
+                    <p><span class="prompt">$</span> <span class="command">focus --list</span></p>
+                    <p><span class="success">✓</span> infrastructure</p>
+                    <p><span class="success">✓</span> automation</p>
+                    <p><span class="success">✓</span> cloud</p>
+                    <p><span class="success">✓</span> homelab</p>
+
+                    <br>
+
+                    <p><span class="prompt">$</span> <span class="command">status</span></p>
+                    <p>
+                        <span class="info">building</span>
+                        <span class="output">practical IT solutions...</span>
+                    </p>
+                </div>
             </div>
         </div>
     </header>
 
     <main>
 
-        <!-- PROJECTS -->
-
         <section id="projects" class="section">
             <div class="section-header">
-                <div>
-                    <h2>Selected projects</h2>
-                </div>
+                <h2>Selected projects</h2>
 
                 <p>
                     A selection of projects focused on automation,
@@ -70,9 +94,7 @@
             <div class="project-grid">
 
                 <article class="project-card">
-                    <div class="project-top">
-                        <span class="project-badge">Featured</span>
-                    </div>
+                    <span class="project-badge">API</span>
 
                     <h3>Monitoring API</h3>
 
@@ -88,39 +110,57 @@
                         <span>Docker</span>
                     </div>
 
-                    <a href="#" class="project-link">
-                        View project →
+                    <a href="https://github.com/timoc04/monitoring-api" class="project-link" target="_blank">
+                        View on GitHub →
                     </a>
                 </article>
 
                 <article class="project-card">
-                    <div class="project-top">
-                        <span class="project-badge">Live</span>
-                    </div>
+                    <span class="project-badge">Signage</span>
 
                     <h3>Digital Signage</h3>
 
                     <p>
-                        A browser-based digital signage platform for managing
-                        videos and images across multiple displays.
+                        A web-based signage system for displaying photos and videos
+                        on multiple screens using a simple browser-based setup.
                     </p>
 
                     <div class="tags">
+                        <span>HTML</span>
+                        <span>CSS</span>
                         <span>JavaScript</span>
                         <span>Media</span>
-                        <span>Web</span>
-                        <span>Automation</span>
                     </div>
 
-                    <a href="/projects/signage/" class="project-link">
-                        Open signage →
+                    <a href="https://github.com/timoc04/signage" class="project-link" target="_blank">
+                        View on GitHub →
                     </a>
                 </article>
 
                 <article class="project-card">
-                    <div class="project-top">
-                        <span class="project-badge">Infrastructure</span>
+                    <span class="project-badge">Scripts</span>
+
+                    <h3>Automation Scripts</h3>
+
+                    <p>
+                        Scripts created for different purposes, such as automation,
+                        system management, testing and simplifying repeated tasks.
+                    </p>
+
+                    <div class="tags">
+                        <span>Python</span>
+                        <span>PowerShell</span>
+                        <span>Automation</span>
+                        <span>Tools</span>
                     </div>
+
+                    <a href="https://github.com/timoc04" class="project-link" target="_blank">
+                        View on GitHub →
+                    </a>
+                </article>
+
+                <article class="project-card">
+                    <span class="project-badge">Homelab</span>
 
                     <h3>Homelab Environment</h3>
 
@@ -136,21 +176,17 @@
                         <span>VMs</span>
                     </div>
 
-                    <a href="#" class="project-link">
-                        Learn more →
+                    <a href="https://github.com/timoc04" class="project-link" target="_blank">
+                        View on GitHub →
                     </a>
                 </article>
 
             </div>
         </section>
 
-        <!-- FOCUS -->
-
         <section id="focus" class="section">
             <div class="section-header">
-                <div>
-                    <h2>What I focus on</h2>
-                </div>
+                <h2>What I focus on</h2>
 
                 <p>
                     My interests are mainly around infrastructure,
@@ -190,6 +226,17 @@
                     <p>
                         Building and experimenting with servers,
                         monitoring, VPNs and self-hosted platforms.
+                    </p>
+                </div>
+
+                <div class="focus-card">
+                    <div class="focus-icon">⌨</div>
+
+                    <h3>Scripting & Tools</h3>
+
+                    <p>
+                        Writing scripts and small tools to automate tasks,
+                        test systems and support practical IT work.
                     </p>
                 </div>
 
