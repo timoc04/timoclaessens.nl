@@ -1,7 +1,5 @@
 :root {
     --bg: #050816;
-    --bg-deep: #030611;
-
     --card: rgba(10, 16, 32, 0.72);
     --card-hover: rgba(14, 22, 43, 0.88);
     --border: rgba(255, 255, 255, 0.11);
@@ -13,7 +11,6 @@
     --purple: #9b7cff;
     --green: #55d66b;
     --yellow: #f2c94c;
-    --red: #ff5f56;
 
     --terminal-bg: #050b18;
     --terminal-top: #171d2b;
@@ -25,19 +22,16 @@
     box-sizing: border-box;
 }
 
-html,
-body {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
 html {
+    width: 100%;
+    overflow-x: hidden;
     scroll-behavior: smooth;
 }
 
 body {
+    width: 100%;
     min-height: 100vh;
+    overflow-x: hidden;
 
     background:
         radial-gradient(circle at 82% 10%, rgba(78, 137, 255, 0.18), transparent 28%),
@@ -61,18 +55,18 @@ a {
 
 .page-glow-blue {
     top: 0;
-    right: 4%;
-    width: 420px;
-    height: 420px;
-    background: radial-gradient(circle, rgba(72, 130, 255, 0.22), transparent 70%);
+    right: 0;
+    width: 360px;
+    height: 360px;
+    background: radial-gradient(circle, rgba(72, 130, 255, 0.2), transparent 70%);
 }
 
 .page-glow-purple {
     top: 35%;
-    right: 22%;
-    width: 520px;
-    height: 520px;
-    background: radial-gradient(circle, rgba(132, 92, 255, 0.20), transparent 70%);
+    right: 5%;
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, rgba(132, 92, 255, 0.18), transparent 70%);
 }
 
 /* NAVBAR */
@@ -153,11 +147,11 @@ a {
 }
 
 .hero h1 {
-    max-width: 720px;
+    max-width: 760px;
     margin-bottom: 1.7rem;
 
-    font-size: clamp(3.5rem, 6.4vw, 6.2rem);
-    line-height: 0.95;
+    font-size: clamp(3.3rem, 6.2vw, 6rem);
+    line-height: 0.96;
     letter-spacing: -0.055em;
     font-weight: 900;
 }
@@ -280,8 +274,6 @@ a {
     min-height: 360px;
     padding: 1.7rem;
 
-    overflow-x: auto;
-
     font-family: Consolas, Monaco, 'Courier New', monospace;
     font-size: 0.95rem;
     line-height: 1.75;
@@ -293,7 +285,6 @@ a {
 
 .terminal-body p {
     margin: 0;
-    white-space: nowrap;
 }
 
 .terminal-user {
@@ -580,7 +571,7 @@ a {
 
 @media (max-width: 650px) {
     .navbar {
-        padding: 1.25rem;
+        padding: 1.15rem 1rem;
     }
 
     .nav-links {
@@ -592,27 +583,31 @@ a {
     }
 
     .hero-content {
-        padding: 2.5rem 1.25rem 4rem;
+        padding: 2.2rem 1rem 4rem;
         grid-template-columns: 1fr;
-        gap: 2.5rem;
+        gap: 2rem;
     }
 
     .hero-tag {
-        font-size: 0.78rem;
-        padding: 0.55rem 0.75rem;
+        max-width: 100%;
+        font-size: 0.72rem;
+        line-height: 1.4;
+        padding: 0.5rem 0.7rem;
         white-space: normal;
     }
 
     .hero h1 {
         max-width: 100%;
-        font-size: clamp(2.8rem, 14vw, 4.3rem);
-        line-height: 0.98;
-        letter-spacing: -0.045em;
+        font-size: clamp(2.15rem, 11vw, 3.3rem);
+        line-height: 1.03;
+        letter-spacing: -0.035em;
+        overflow-wrap: break-word;
     }
 
     .hero p {
         max-width: 100%;
-        font-size: 1rem;
+        font-size: 0.98rem;
+        line-height: 1.65;
     }
 
     .hero-buttons {
@@ -622,6 +617,7 @@ a {
     .btn-primary,
     .btn-secondary {
         width: 100%;
+        min-height: 50px;
     }
 
     .terminal-card {
@@ -637,22 +633,24 @@ a {
 
     .terminal-body {
         min-height: auto;
-        padding: 1.15rem;
-        font-size: 0.76rem;
-        line-height: 1.7;
-        overflow-x: auto;
+        padding: 1rem;
+        font-size: clamp(0.62rem, 2.7vw, 0.76rem);
+        line-height: 1.65;
+        overflow-x: hidden;
     }
 
     .terminal-body p {
-        white-space: nowrap;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
     }
 
     .section {
-        padding: 3rem 1.25rem 5rem;
+        padding: 3rem 1rem 5rem;
     }
 
     .section-header h2 {
-        font-size: clamp(2.3rem, 11vw, 3.2rem);
+        font-size: clamp(2.1rem, 10vw, 3rem);
     }
 
     .project-grid,
@@ -663,5 +661,6 @@ a {
     .project-card,
     .focus-card {
         width: 100%;
+        padding: 1.35rem;
     }
 }
