@@ -1,276 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Timo Claessens</title>
 
-  <title>Timo Claessens</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
 
-  <meta
-    name="description"
-    content="Building practical IT solutions, automation tools and infrastructure projects."
-  />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link rel="stylesheet" href="assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
-  <header>
-    <div class="container navbar">
+    <div class="background-glow"></div>
 
-      <a href="#" class="logo">
-        Timo Claessens<span>.</span>
-      </a>
+    <header class="hero">
+        <nav class="navbar">
+            <div class="logo">Timo Claessens</div>
 
-      <nav>
-        <a href="#about">About</a>
-        <a href="#focus">Focus</a>
-        <a href="#projects">Projects</a>
-        <a href="#contact">Contact</a>
-      </nav>
+            <div class="nav-links">
+                <a href="#projects">Projects</a>
+                <a href="#focus">Focus</a>
+                <a href="mailto:info@timoclaessens.nl">Contact</a>
+            </div>
+        </nav>
 
-    </div>
-  </header>
+        <div class="hero-content">
+            <span class="hero-tag">
+                HBO ICT Student • Infrastructure • Automation
+            </span>
 
-  <main>
-
-    <section class="hero container" id="about">
-
-      <div class="hero-content">
-
-        <div class="badge">
-          <div class="dot"></div>
-          HBO-ICT Student · Infrastructure · Automation
-        </div>
-
-        <h1>
-          Building practical IT solutions,
-          automation tools and
-          <span>infrastructure projects.</span>
-        </h1>
-
-        <p>
-          I am Timo Claessens, an HBO-ICT student from the Netherlands with an
-          interest in networking, Linux systems, cloud platforms and automation.
-          I enjoy building practical and reliable IT solutions.
-        </p>
-
-        <div class="buttons">
-          <a href="#projects" class="btn primary">
-            View projects
-          </a>
-
-          <a href="#contact" class="btn secondary">
-            Get in touch
-          </a>
-        </div>
-
-      </div>
-
-      <div class="terminal">
-
-        <div class="terminal-top">
-          <div class="circle"></div>
-          <div class="circle"></div>
-          <div class="circle"></div>
-        </div>
-
-        <div class="terminal-content">
-
-          <p>
-            <span class="green">timo@homepage</span>:~$ whoami
-          </p>
-
-          <p>
-            Timo Claessens
-          </p>
-
-          <br>
-
-          <p>
-            <span class="green">timo@homepage</span>:~$ interests
-          </p>
-
-          <p class="muted">
-            networking · linux · azure · docker · homelab
-          </p>
-
-          <br>
-
-          <p>
-            <span class="green">timo@homepage</span>:~$ current_focus
-          </p>
-
-          <p class="muted">
-            practical infrastructure and automation solutions
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
-
-    <section class="container section" id="focus">
-
-      <div class="section-title">
-        <h2>What I focus on</h2>
-
-        <p>
-          My interests are mainly around infrastructure, automation and
-          practical systems.
-        </p>
-      </div>
-
-      <div class="cards">
-
-        <div class="card">
-          <div class="icon">☁</div>
-
-          <h3>Cloud & Infrastructure</h3>
-
-          <p>
-            Working with Azure, virtual machines, networking and secure
-            environments.
-          </p>
-        </div>
-
-        <div class="card">
-          <div class="icon">⚙</div>
-
-          <h3>Automation</h3>
-
-          <p>
-            Creating scripts and tools that automate repetitive tasks and
-            improve workflows.
-          </p>
-        </div>
-
-        <div class="card">
-          <div class="icon">⌂</div>
-
-          <h3>Homelab</h3>
-
-          <p>
-            Experimenting with Proxmox, Linux servers, networking and
-            self-hosted services.
-          </p>
-        </div>
-
-      </div>
-
-    </section>
-
-    <section class="container section" id="projects">
-
-      <div class="section-title">
-        <h2>Selected projects</h2>
-
-        <p>
-          A few examples of projects and technologies I enjoy working on.
-        </p>
-      </div>
-
-      <div class="project-list">
-
-        <div class="project">
-
-          <div>
-            <h3>Monitoring API</h3>
+            <h1>
+                Building practical IT solutions,
+                automation tools and modern infrastructure.
+            </h1>
 
             <p>
-              A Flask-based monitoring API with Azure SQL integration and
-              Docker deployment.
+                I enjoy creating reliable systems, automation projects,
+                cloud solutions and practical tools that solve real-world problems.
             </p>
 
-            <div class="tags">
-              <span>Python</span>
-              <span>Flask</span>
-              <span>Azure</span>
-              <span>Docker</span>
+            <div class="hero-buttons">
+                <a href="#projects" class="btn-primary">View projects</a>
+                <a href="mailto:info@timoclaessens.nl" class="btn-secondary">
+                    Contact me
+                </a>
             </div>
-          </div>
-
         </div>
+    </header>
 
-        <div class="project">
+    <main>
 
-          <div>
-            <h3>Homelab Environment</h3>
+        <!-- PROJECTS -->
 
-            <p>
-              A Proxmox-based homelab environment for virtualisation, backups
-              and testing infrastructure.
-            </p>
+        <section id="projects" class="section">
+            <div class="section-header">
+                <div>
+                    <h2>Selected projects</h2>
+                </div>
 
-            <div class="tags">
-              <span>Proxmox</span>
-              <span>Linux</span>
-              <span>Networking</span>
+                <p>
+                    A selection of projects focused on automation,
+                    infrastructure and practical IT systems.
+                </p>
             </div>
-          </div>
 
-        </div>
+            <div class="project-grid">
 
-        <div class="project">
+                <article class="project-card">
+                    <div class="project-top">
+                        <span class="project-badge">Featured</span>
+                    </div>
 
-          <div>
-            <h3>Automation Tools</h3>
+                    <h3>Monitoring API</h3>
 
-            <p>
-              Small utilities and automation scripts for simplifying IT tasks.
-            </p>
+                    <p>
+                        A Flask-based monitoring API with Azure SQL integration,
+                        Docker deployment and cloud monitoring capabilities.
+                    </p>
 
-            <div class="tags">
-              <span>Python</span>
-              <span>PowerShell</span>
-              <span>ESP32</span>
+                    <div class="tags">
+                        <span>Python</span>
+                        <span>Flask</span>
+                        <span>Azure</span>
+                        <span>Docker</span>
+                    </div>
+
+                    <a href="#" class="project-link">
+                        View project →
+                    </a>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-top">
+                        <span class="project-badge">Live</span>
+                    </div>
+
+                    <h3>Digital Signage</h3>
+
+                    <p>
+                        A browser-based digital signage platform for managing
+                        videos and images across multiple displays.
+                    </p>
+
+                    <div class="tags">
+                        <span>JavaScript</span>
+                        <span>Media</span>
+                        <span>Web</span>
+                        <span>Automation</span>
+                    </div>
+
+                    <a href="/projects/signage/" class="project-link">
+                        Open signage →
+                    </a>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-top">
+                        <span class="project-badge">Infrastructure</span>
+                    </div>
+
+                    <h3>Homelab Environment</h3>
+
+                    <p>
+                        A Proxmox-based homelab environment with virtualisation,
+                        networking, monitoring and self-hosted services.
+                    </p>
+
+                    <div class="tags">
+                        <span>Proxmox</span>
+                        <span>Linux</span>
+                        <span>Networking</span>
+                        <span>VMs</span>
+                    </div>
+
+                    <a href="#" class="project-link">
+                        Learn more →
+                    </a>
+                </article>
+
             </div>
-          </div>
+        </section>
 
-        </div>
+        <!-- FOCUS -->
 
-      </div>
+        <section id="focus" class="section">
+            <div class="section-header">
+                <div>
+                    <h2>What I focus on</h2>
+                </div>
 
-    </section>
+                <p>
+                    My interests are mainly around infrastructure,
+                    automation and practical systems.
+                </p>
+            </div>
 
-    <section class="container section" id="contact">
+            <div class="focus-grid">
 
-      <div class="contact-box">
+                <div class="focus-card">
+                    <div class="focus-icon">☁</div>
 
-        <h2>Want to connect?</h2>
+                    <h3>Cloud & Infrastructure</h3>
 
-        <p>
-          Feel free to contact me about infrastructure, automation or
-          technical projects.
-        </p>
+                    <p>
+                        Azure, networking, virtualisation,
+                        Linux and hybrid infrastructure solutions.
+                    </p>
+                </div>
 
-        <div class="buttons center">
+                <div class="focus-card">
+                    <div class="focus-icon">⚙</div>
 
-          <a href="mailto:info@timoclaessens.nl" class="btn primary">
-            info@timoclaessens.nl
-          </a>
+                    <h3>Automation</h3>
 
-          <a
-            href="https://github.com/timoc04"
-            target="_blank"
-            class="btn secondary"
-          >
-            GitHub
-          </a>
+                    <p>
+                        Creating tools and workflows that improve
+                        efficiency and simplify management.
+                    </p>
+                </div>
 
-        </div>
+                <div class="focus-card">
+                    <div class="focus-icon">⌂</div>
 
-      </div>
+                    <h3>Homelab</h3>
 
-    </section>
+                    <p>
+                        Building and experimenting with servers,
+                        monitoring, VPNs and self-hosted platforms.
+                    </p>
+                </div>
 
-  </main>
+            </div>
+        </section>
 
-  <footer>
-    © 2026 Timo Claessens
-  </footer>
+    </main>
 
 </body>
 </html>
