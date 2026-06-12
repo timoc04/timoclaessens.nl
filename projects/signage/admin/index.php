@@ -698,7 +698,7 @@ sort($files);
 
                             <a
                                 class="delete"
-                                href="?screen=<?php echo urlencode($currentScreen); ?>&delete=<?php echo urlencode($file); ?>"
+                                href="/projects/signage/admin/?screen=<?php echo urlencode($currentScreen); ?>&delete=<?php echo urlencode($file); ?>"
                                 onclick="return confirm('Weet je zeker dat je dit bestand wilt verwijderen?');"
                             >
                                 Verwijderen
