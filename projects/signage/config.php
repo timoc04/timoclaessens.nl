@@ -1,6 +1,6 @@
 <?php
 
-const ADMIN_PASSWORD = 'jouwSterkeWachtwoordHier';
+const ADMIN_PASSWORD = 'Wielrennen2004!';
 
 const SCREENS_DIR = __DIR__ . '/screens';
 const SCREENS_URL = 'screens';
