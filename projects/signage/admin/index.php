@@ -12,7 +12,7 @@ if (isset($_SESSION['last_activity'])) {
         session_unset();
         session_destroy();
 
-        header('Location: logout.php?timeout=1');
+        header('Location: /projects/signage/admin/logout.php?timeout=1');
         exit;
     }
 }
@@ -20,7 +20,7 @@ if (isset($_SESSION['last_activity'])) {
 $_SESSION['last_activity'] = time();
 
 if (!isset($_SESSION['logged_in'])) {
-    header('Location: login.php');
+    header('Location: /projects/signage/admin/login.php');
     exit;
 }
 
