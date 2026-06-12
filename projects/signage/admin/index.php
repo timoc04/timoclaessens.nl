@@ -513,11 +513,11 @@ sort($files);
     </p>
 
     <div class="top-links">
-        <a class="button" href="../<?php echo htmlspecialchars($currentScreen); ?>" target="_blank">
+        <a class="button" href="/projects/signage/<?php echo htmlspecialchars($currentScreen); ?>" target="_blank">
             Open huidig scherm
         </a>
 
-        <a class="button secondary" href="logout.php">
+        <a class="button secondary" href="/projects/signage/admin/logout.php">
             Uitloggen
         </a>
     </div>
@@ -715,7 +715,7 @@ sort($files);
 const timeoutSeconds = <?php echo SESSION_TIMEOUT; ?>;
 
 setTimeout(function () {
-    window.location.href = "logout.php?timeout=1";
+    window.location.href = "/projects/signage/admin/logout.php?timeout=1";
 }, timeoutSeconds * 1000);
 </script>
 
