@@ -1,5 +1,12 @@
 RewriteEngine On
 RewriteBase /projects/signage/
 
+DirectoryIndex index.php
+
+# Admin route
 RewriteRule ^admin/?$ admin/index.php [L]
+
+# Alleen screen-routes afvangen als het geen bestaand bestand of map is
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([a-zA-Z0-9_-]+)/?$ index.php?screen=$1 [L,QSA]
