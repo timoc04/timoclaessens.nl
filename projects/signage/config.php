@@ -3,7 +3,7 @@
 const ADMIN_PASSWORD = 'WachtwoordHierInvullen!';
 
 const SCREENS_DIR = __DIR__ . '/screens';
-const SCREENS_URL = 'screens';
+const SCREENS_URL = '/projects/signage/screens';
 
 const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'mp4'];
 
