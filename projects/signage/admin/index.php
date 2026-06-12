@@ -179,7 +179,7 @@ if (!in_array($currentScreen, $screens, true)) {
 $screenDir = SCREENS_DIR . '/' . $currentScreen;
 $mediaDir = $screenDir . '/media';
 $settingsFile = $screenDir . '/settings.json';
-$mediaUrl = '../screens/' . $currentScreen . '/media';
+$mediaUrl = '/projects/signage/screens/' . $currentScreen . '/media';
 
 if (!is_dir($mediaDir)) {
     mkdir($mediaDir, 0755, true);
