@@ -61,7 +61,7 @@ session_destroy();
 
     <p>Je bent succesvol uitgelogd uit het signage beheerpaneel.</p>
 
-    <a href="login.php">
+    <a href="/projects/signage/admin/login.php">
         Opnieuw inloggen
     </a>
 </div>
