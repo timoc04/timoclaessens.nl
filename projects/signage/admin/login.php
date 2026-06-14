@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($password === ADMIN_PASSWORD) {
         $_SESSION['logged_in'] = true;
-        header('Location: /projects/signage/admin/');
+        header('Location: ' . app_url('admin/'));
         exit;
     }
 

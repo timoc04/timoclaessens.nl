@@ -25,7 +25,7 @@ $screen = sanitizeScreenName($_GET['screen'] ?? 'main');
 
 $mediaDir = SCREENS_DIR . '/' . $screen . '/media';
 $settingsFile = SCREENS_DIR . '/' . $screen . '/settings.json';
-$mediaUrl = SCREENS_URL . '/' . $screen . '/media';
+$mediaUrl = app_url('screens/' . $screen . '/media');
 
 $files = [];
 

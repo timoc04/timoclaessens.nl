@@ -1,5 +1,8 @@
 <?php
 session_start();
+
+require_once __DIR__ . '/../config.php';
+
 session_destroy();
 ?>
 
@@ -61,7 +64,7 @@ session_destroy();
 
     <p>Je bent succesvol uitgelogd uit het signage beheerpaneel.</p>
 
-    <a href="/projects/signage/admin/login.php">
+    <a href="<?php echo htmlspecialchars(app_url('admin/login.php')); ?>">
         Opnieuw inloggen
     </a>
 </div>

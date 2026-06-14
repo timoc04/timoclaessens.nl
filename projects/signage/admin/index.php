@@ -12,7 +12,7 @@ if (isset($_SESSION['last_activity'])) {
         session_unset();
         session_destroy();
 
-        header('Location: /projects/signage/admin/logout.php?timeout=1');
+        header('Location: ' . app_url('admin/logout.php?timeout=1'));
         exit;
     }
 }
@@ -20,7 +20,7 @@ if (isset($_SESSION['last_activity'])) {
 $_SESSION['last_activity'] = time();
 
 if (!isset($_SESSION['logged_in'])) {
-    header('Location: /projects/signage/admin/login.php');
+    header('Location: ' . app_url('admin/login.php'));
     exit;
 }
 
@@ -179,7 +179,7 @@ if (!in_array($currentScreen, $screens, true)) {
 $screenDir = SCREENS_DIR . '/' . $currentScreen;
 $mediaDir = $screenDir . '/media';
 $settingsFile = $screenDir . '/settings.json';
-$mediaUrl = '/projects/signage/screens/' . $currentScreen . '/media';
+$mediaUrl = app_url('screens/' . $currentScreen . '/media');
 
 if (!is_dir($mediaDir)) {
     mkdir($mediaDir, 0755, true);
@@ -513,11 +513,11 @@ sort($files);
     </p>
 
     <div class="top-links">
-        <a class="button" href="/projects/signage/<?php echo htmlspecialchars($currentScreen); ?>" target="_blank">
+        <a class="button" href="<?php echo htmlspecialchars(app_url($currentScreen)); ?>" target="_blank">
             Open huidig scherm
         </a>
 
-        <a class="button secondary" href="/projects/signage/admin/logout.php">
+        <a class="button secondary" href="<?php echo htmlspecialchars(app_url('admin/logout.php')); ?>">
             Uitloggen
         </a>
     </div>
@@ -595,7 +595,7 @@ sort($files);
         <p class="small-text">
             Player URL huidig scherm:
             <strong>
-                /projects/signage/<?php echo htmlspecialchars($currentScreen); ?>
+                <?php echo htmlspecialchars(app_full_url($currentScreen)); ?>
             </strong>
         </p>
     </section>
@@ -698,7 +698,7 @@ sort($files);
 
                             <a
                                 class="delete"
-                                href="/projects/signage/admin/?screen=<?php echo urlencode($currentScreen); ?>&delete=<?php echo urlencode($file); ?>"
+                                href="<?php echo htmlspecialchars(app_url('admin/?screen=' . urlencode($currentScreen) . '&delete=' . urlencode($file))); ?>"
                                 onclick="return confirm('Weet je zeker dat je dit bestand wilt verwijderen?');"
                             >
                                 Verwijderen
@@ -715,7 +715,7 @@ sort($files);
 const timeoutSeconds = <?php echo SESSION_TIMEOUT; ?>;
 
 setTimeout(function () {
-    window.location.href = "/projects/signage/admin/logout.php?timeout=1";
+    window.location.href = "<?php echo htmlspecialchars(app_url('admin/logout.php?timeout=1')); ?>";
 }, timeoutSeconds * 1000);
 </script>
 
