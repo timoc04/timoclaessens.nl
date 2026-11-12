@@ -1,186 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timo Claessens</title>
-
-    <link rel="icon" type="image/png" href="/assets/icons/favicon-96x96.png" sizes="96x96">
-    <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
-    <link rel="shortcut icon" href="/assets/icons/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
-    <meta name="apple-mobile-web-app-title" content="TimoClaessens">
-    <link rel="manifest" href="/assets/icons/site.webmanifest">
-
-    <link rel="stylesheet" href="/assets/css/style.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f6f7f5">
+<meta name="description" content="Timo Claessens — ICT student specialising in infrastructure, cloud and automation.">
+<meta property="og:title" content="Timo Claessens | ICT & Technology"><meta property="og:description" content="Curious by nature. Driven to build."><meta property="og:type" content="website">
+<title>Timo Claessens — ICT & Technology</title>
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+<link rel="stylesheet" href="/assets/css/style.css"><script defer src="/assets/js/main.js"></script>
 </head>
 <body>
-    <div class="page-glow page-glow-blue"></div>
-    <div class="page-glow page-glow-purple"></div>
-
-    <header class="hero">
-        <nav class="navbar">
-            <a href="/" class="logo">Timo Claessens</a>
-
-            <div class="nav-links">
-                <a href="/">Home</a>
-                <a href="/#projects">Projects</a>
-                <a href="/#focus">Focus</a>
-                <a href="/privacy">Privacy</a>
-                <a href="mailto:info@timoclaessens.nl">Contact</a>
-            </div>
-        </nav>
-
-        <div class="hero-content">
-            <div class="hero-text">
-                <span class="hero-tag">
-                    HBO ICT Student • Infrastructure • Automation
-                </span>
-
-                <h1>
-                    Building practical IT solutions,
-                    <span>automation tools</span> and modern infrastructure.
-                </h1>
-
-                <p>
-                    I enjoy creating reliable systems, automation projects, cloud solutions and practical tools
-                    that solve real-world problems.
-                </p>
-
-                <div class="hero-buttons">
-                    <a href="#projects" class="btn-primary">View projects →</a>
-                    <a href="mailto:info@timoclaessens.nl" class="btn-secondary">Contact me ✉</a>
-                </div>
-            </div>
-
-            <div class="terminal-card">
-                <div class="terminal-bar">
-                    <span class="terminal-dot red"></span>
-                    <span class="terminal-dot yellow"></span>
-                    <span class="terminal-dot green"></span>
-                </div>
-
-                <div class="terminal-body">
-                    <p><span class="terminal-user">timo@portfolio</span>:<span class="terminal-path">~$</span> <span class="terminal-command">whoami</span></p>
-                    <p class="terminal-output">timo-claessens</p>
-                    <br>
-                    <p><span class="terminal-user">timo@portfolio</span>:<span class="terminal-path">~$</span> <span class="terminal-command purple">focus</span></p>
-                    <p class="terminal-output">infrastructure</p>
-                    <p class="terminal-output">automation</p>
-                    <p class="terminal-output">cloud</p>
-                    <p class="terminal-output">homelab</p>
-                    <br>
-                    <p><span class="terminal-user">timo@portfolio</span>:<span class="terminal-path">~$</span> <span class="terminal-command">status</span></p>
-                    <p class="terminal-output">building practical IT solutions...</p>
-                    <br>
-                    <p><span class="terminal-user">timo@portfolio</span>:<span class="terminal-path">~$</span> <span class="terminal-cursor">_</span></p>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <main>
-        <section class="section" id="projects">
-            <div class="section-header">
-                <h2>Selected projects</h2>
-                <p>A selection of projects focused on automation, infrastructure and practical IT systems.</p>
-            </div>
-
-            <div class="project-grid">
-                <article class="project-card">
-                    <span class="project-badge blue">API</span>
-                    <h3>Monitoring API</h3>
-                    <p>A Flask-based monitoring API with Azure SQL integration, Docker deployment and cloud monitoring capabilities.</p>
-
-                    <div class="tags">
-                        <span>Python</span>
-                        <span>Flask</span>
-                        <span>Azure</span>
-                        <span>Docker</span>
-                    </div>
-
-                    <a href="https://github.com/timoc04" class="project-link">View on GitHub →</a>
-                </article>
-
-                <article class="project-card">
-                    <span class="project-badge purple">Signage</span>
-                    <h3>Digital Signage</h3>
-                    <p>A web-based signage system for displaying photos and videos on multiple screens using a simple browser-based setup.</p>
-
-                    <div class="tags">
-                        <span>HTML</span>
-                        <span>CSS</span>
-                        <span>JavaScript</span>
-                        <span>Media</span>
-                    </div>
-
-                    <a href="https://github.com/timoc04" class="project-link">View on GitHub →</a>
-                </article>
-
-                <article class="project-card">
-                    <span class="project-badge yellow">Scripts</span>
-                    <h3>Automation Scripts</h3>
-                    <p>Scripts created for different purposes, such as automation, system management, testing and simplifying repeated tasks.</p>
-
-                    <div class="tags">
-                        <span>Python</span>
-                        <span>PowerShell</span>
-                        <span>Automation</span>
-                        <span>Tools</span>
-                    </div>
-
-                    <a href="https://github.com/timoc04" class="project-link">View on GitHub →</a>
-                </article>
-
-                <article class="project-card">
-                    <span class="project-badge green">Homelab</span>
-                    <h3>Homelab Environment</h3>
-                    <p>A Proxmox-based homelab environment with virtualisation, networking, monitoring and self-hosted services.</p>
-
-                    <div class="tags">
-                        <span>Proxmox</span>
-                        <span>Linux</span>
-                        <span>Networking</span>
-                        <span>VMs</span>
-                    </div>
-
-                    <a href="https://github.com/timoc04" class="project-link">View on GitHub →</a>
-                </article>
-            </div>
-        </section>
-
-        <section class="section" id="focus">
-            <div class="section-header">
-                <h2>What I focus on</h2>
-                <p>My interests are mainly around infrastructure, automation and practical systems.</p>
-            </div>
-
-            <div class="focus-grid">
-                <article class="focus-card">
-                    <div class="focus-icon icon-blue">☁</div>
-                    <h3>Cloud & Infrastructure</h3>
-                    <p>Azure, networking, virtualisation, Linux and hybrid infrastructure solutions.</p>
-                </article>
-
-                <article class="focus-card">
-                    <div class="focus-icon icon-purple">⚙</div>
-                    <h3>Automation</h3>
-                    <p>Creating tools and workflows that improve efficiency and simplify management.</p>
-                </article>
-
-                <article class="focus-card">
-                    <div class="focus-icon icon-green">⌂</div>
-                    <h3>Homelab</h3>
-                    <p>Building and experimenting with servers, monitoring, VPNs and self-hosted platforms.</p>
-                </article>
-
-                <article class="focus-card">
-                    <div class="focus-icon icon-yellow">⌨</div>
-                    <h3>Scripting & Tools</h3>
-                    <p>Writing scripts and small tools for automation, system management and daily productivity.</p>
-                </article>
-            </div>
-        </section>
-    </main>
-</body>
-</html>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header"><div class="container navigation">
+<a href="/" class="brand" aria-label="Timo Claessens homepage"><span class="monogram">tc<span>.</span></span><span>Timo Claessens</span></a>
+<button class="menu-button" type="button" aria-controls="nav" aria-expanded="false" aria-label="Open navigation"><span></span><span></span></button>
+<nav id="nav" class="nav-links" aria-label="Main navigation"><a href="#about">About</a><a href="#projects">Projects</a><a href="#expertise">Expertise</a><a class="nav-cta" href="#contact">Let's talk ↗</a></nav>
+</div></header>
+<main id="main">
+<!-- EDIT: HERO HEADLINE, INTRODUCTION AND BUTTONS -->
+<section class="hero section" id="home"><div class="container hero-layout">
+<div class="hero-copy"><div class="eyebrow"><span class="status-dot"></span> ICT STUDENT · CLOUD · AUTOMATION</div>
+<h1>Curious by nature.<br><span>Driven to build.</span></h1>
+<p class="intro">Hey, I'm Timo — an ICT student in Eindhoven with a passion for building reliable infrastructure, useful software and smart solutions to real-world problems.</p>
+<div class="buttons"><a class="btn btn-primary" href="#projects">Explore my work ↗</a><a class="btn btn-secondary" href="#about">More about me ↘</a></div>
+<div class="hero-footnote">— Learning, experimenting & creating</div></div>
+<div class="hero-visual" aria-label="Illustration of connected digital systems" role="img"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="visual-core">TC<span>.</span></div><div class="floating-card top-card">⌘ &nbsp; build &nbsp; ↗</div><div class="floating-card bottom-card"><i></i> systems online</div><div class="visual-caption">IDEAS → SYSTEMS → IMPACT</div></div>
+</div></section>
+<!-- EDIT: ABOUT TEXT AND QUICK FACTS -->
+<section id="about" class="section about"><div class="container two-columns">
+<div><div class="kicker">01 / ABOUT ME</div><h2>A little about<br><em>what drives me.</em></h2></div>
+<div class="about-copy"><p class="lead">I enjoy understanding how technology works — and making it work better.</p>
+<p>I'm studying HBO-ICT at Fontys University of Applied Sciences in Eindhoven. My interests span cloud platforms, networking, automation and software development. I love turning ideas into practical projects, whether that's a cloud environment, a useful tool or something in my homelab.</p>
+<p>Outside my studies, I keep learning by experimenting, building and refining my own projects.</p>
+<div class="facts"><div><strong>Fontys</strong><span>HBO-ICT</span></div><div><strong>Eindhoven</strong><span>Netherlands</span></div><div><strong>Always</strong><span>Learning & building</span></div></div></div></div></section>
+<!-- EDIT: ADD OR REMOVE AN ENTIRE <article class="project-card"> TO CHANGE THE PROJECTS -->
+<section id="projects" class="section projects"><div class="container">
+<div class="heading-row"><div><div class="kicker">02 / SELECTED WORK</div><h2>Things I've <em>built.</em></h2></div><a class="underline-link" href="https://github.com/timoc04" target="_blank" rel="noopener noreferrer">More on GitHub ↗</a></div>
+<div class="project-grid">
+<article class="project-card"><div class="project-art art-cloud"><div class="cloud-tiles"><span>AWS</span><span>TF</span><span>CI/CD</span><span>EC2</span></div><small>CLOUD INFRASTRUCTURE</small></div><div class="project-body"><div class="project-type">01 / CLOUD & DEVOPS</div><h3>AWS Infrastructure & Automation</h3><p>Designing and deploying scalable infrastructure on AWS using Terraform, Ansible and CI/CD workflows.</p><div class="tags"><span>AWS</span><span>Terraform</span><span>Ansible</span><span>GitHub Actions</span></div><a class="project-link" href="https://github.com/timoc04" target="_blank" rel="noopener noreferrer">Explore on GitHub <span>↗</span></a></div></article>
+<article class="project-card"><div class="project-art art-signage"><div class="mini-display"><div class="display-dots">● ● ●</div><div class="display-landscape"><span></span></div><div class="display-lines">▰ ▰ ▰</div></div><small>WEB APPLICATION</small></div><div class="project-body"><div class="project-type">02 / WEB DEVELOPMENT</div><h3>Digital Signage Platform</h3><p>A browser-based digital signage solution for managing and displaying content across screens.</p><div class="tags"><span>PHP</span><span>JavaScript</span><span>HTML & CSS</span></div><a class="project-link" href="https://github.com/timoc04/signage" target="_blank" rel="noopener noreferrer">View repository <span>↗</span></a></div></article>
+<article class="project-card"><div class="project-art art-api"><div class="mini-api"><div class="display-dots">● ● ●</div><div class="code-line"></div><div class="code-line short"></div><div class="chart-bars"><i></i><i></i><i></i><i></i><i></i><i></i></div></div><small>SOFTWARE & MONITORING</small></div><div class="project-body"><div class="project-type">03 / BACKEND DEVELOPMENT</div><h3>Cloud Monitoring API</h3><p>A Python Flask API integrated with Azure services, containerised and deployed through automated workflows.</p><div class="tags"><span>Python</span><span>Flask</span><span>Azure</span><span>Docker</span></div><a class="project-link" href="https://github.com/timoc04/monitoring-api" target="_blank" rel="noopener noreferrer">View repository <span>↗</span></a></div></article>
+<article class="project-card"><div class="project-art art-homelab"><div class="server-stack"><div>● <span>━━━━━━━━</span></div><div>● <span>━━━━━━━━</span></div><div>● <span>━━━━━━━━</span></div></div><small>SELF-HOSTED SYSTEMS</small></div><div class="project-body"><div class="project-type">04 / PERSONAL LAB</div><h3>Homelab & Self-Hosting</h3><p>Hands-on exploration of virtualisation, Linux, networking and self-hosted services with Proxmox.</p><div class="tags"><span>Proxmox</span><span>Linux</span><span>Networking</span></div><a class="project-link" href="https://github.com/timoc04" target="_blank" rel="noopener noreferrer">Explore on GitHub <span>↗</span></a></div></article>
+</div></div></section>
+<!-- EDIT: EXPERTISE CARDS -->
+<section id="expertise" class="section expertise"><div class="container"><div class="heading-row"><div><div class="kicker">03 / WHAT INTERESTS ME</div><h2>Areas I <em>explore.</em></h2></div><p>A few technologies and disciplines I enjoy working with.</p></div>
+<div class="expertise-grid"><article><div class="skill-icon">↗</div><h3>Cloud & Infrastructure</h3><p>Building scalable, resilient systems across cloud and hybrid environments.</p></article><article><div class="skill-icon">⌘</div><h3>DevOps & Automation</h3><p>Streamlining deployments and repetitive work through code and pipelines.</p></article><article><div class="skill-icon">{ }</div><h3>Software Development</h3><p>Creating practical web applications, APIs and tools that solve problems.</p></article><article><div class="skill-icon">◎</div><h3>Networking & Homelab</h3><p>Learning through hands-on infrastructure experiments and self-hosting.</p></article></div></div></section>
+<!-- EDIT: CONTACT EMAIL AND SOCIAL LINKS -->
+<section id="contact" class="section contact"><div class="container two-columns"><div><div class="kicker">04 / GET IN TOUCH</div><h2>Have something<br>in <em>mind?</em></h2><p>Have a question, an idea or just want to connect? Feel free to reach out.</p></div><div class="contact-right"><a class="email-link" href="mailto:info@timoclaessens.nl">info@timoclaessens.nl ↗</a><div class="socials"><a href="https://github.com/timoc04" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="mailto:info@timoclaessens.nl">Email ↗</a></div></div></div></section>
+</main>
+<!-- EDIT: FOOTER LINKS -->
+<footer><div class="container footer-content"><a href="#home" class="monogram">tc<span>.</span></a><p>© <span id="year">2026</span> Timo Claessens. Made with curiosity.</p><div><a href="/privacy/">Privacy</a><a href="#home">Back to top ↑</a></div></div></footer>
+</body></html>
