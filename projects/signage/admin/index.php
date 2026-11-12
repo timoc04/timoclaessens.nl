@@ -327,199 +327,31 @@ sort($files);
     <meta charset="UTF-8">
     <title>Signage Admin</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            color: #1f2937;
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/svg+xml" href="../../../assets/icons/favicon.svg">
+    <link rel="stylesheet" href="admin.css">
 
-        header {
-            background: #111827;
-            color: white;
-            padding: 24px 40px;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 28px;
-        }
-
-        header p {
-            margin: 6px 0 0;
-            color: #cbd5e1;
-        }
-
-        main {
-            max-width: 1100px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .top-links {
-            display: flex;
-            gap: 12px;
-            margin-top: 18px;
-            flex-wrap: wrap;
-        }
-
-        .card {
-            background: white;
-            border-radius: 14px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-        }
-
-        .button,
-        button {
-            display: inline-block;
-            background: #2563eb;
-            color: white;
-            padding: 10px 16px;
-            border-radius: 8px;
-            border: none;
-            text-decoration: none;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .button.secondary {
-            background: #374151;
-        }
-
-        .message {
-            background: #dcfce7;
-            color: #166534;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        input[type="file"],
-        input[type="text"],
-        input[type="number"],
-        select {
-            box-sizing: border-box;
-            padding: 10px;
-            background: #f9fafb;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        .screen-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 24px;
-        }
-
-        .delete-screen-button {
-            width: 100%;
-            background: #dc2626;
-        }
-
-        .delete-screen-button:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
-        }
-
-        .media-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-            gap: 18px;
-        }
-
-        .media-item {
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .preview {
-            height: 130px;
-            background: #111827;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .preview img,
-        .preview video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .file-info {
-            padding: 12px;
-            font-size: 14px;
-        }
-
-        .filename {
-            word-break: break-all;
-            font-weight: bold;
-            margin-bottom: 12px;
-        }
-
-        .rename-form {
-            margin-bottom: 12px;
-        }
-
-        .rename-button {
-            width: 100%;
-            background: #2563eb;
-        }
-
-        .delete {
-            display: block;
-            text-align: center;
-            color: white;
-            background: #dc2626;
-            padding: 9px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .empty,
-        .small-text {
-            color: #6b7280;
-        }
-
-        .small-text {
-            font-size: 13px;
-            margin-bottom: 12px;
-        }
-
-        @media (max-width: 900px) {
-            .screen-actions {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
 </head>
 
 <body>
 
-<header>
-    <h1>Signage beheer</h1>
-
-    <p>
-        Beheer meerdere signage schermen, media en weergavetijden.
-    </p>
-
-    <div class="top-links">
-        <a class="button" href="<?php echo htmlspecialchars(app_url($currentScreen)); ?>" target="_blank">
-            Open huidig scherm
-        </a>
-
-        <a class="button secondary" href="<?php echo htmlspecialchars(app_url('admin/logout.php')); ?>">
-            Uitloggen
-        </a>
+<header class="site-header">
+    <div class="header-inner">
+        <div class="topbar">
+            <a class="brand" href="../../../index.html" aria-label="Timo Claessens homepage">
+                <span class="monogram">tc<span>.</span></span>
+                <span>Timo Claessens <span aria-hidden="true">/</span> Signage</span>
+            </a>
+            <nav class="top-links" aria-label="Beheeracties">
+                <a class="button" href="<?php echo htmlspecialchars(app_url($currentScreen)); ?>" target="_blank" rel="noopener noreferrer">Open huidig scherm ↗</a>
+                <a class="button secondary" href="<?php echo htmlspecialchars(app_url('admin/logout.php')); ?>">Uitloggen</a>
+            </nav>
+        </div>
+        <div class="intro">
+            <p class="eyebrow">Signage / Administration</p>
+            <h1>Signage <em>beheer.</em></h1>
+            <p>Beheer meerdere signage schermen, media en weergavetijden.</p>
+        </div>
     </div>
 </header>
 
@@ -531,7 +363,7 @@ sort($files);
     <?php endif; ?>
 
     <section class="card">
-        <h2>Schermen</h2>
+        <div class="card-heading"><h2>Schermen</h2><p class="card-description">Selecteer een scherm of beheer de beschikbare schermen.</p></div>
 
         <div class="screen-actions">
             <form method="GET">
@@ -592,7 +424,7 @@ sort($files);
             </form>
         </div>
 
-        <p class="small-text">
+        <p class="small-text player-url">
             Player URL huidig scherm:
             <strong>
                 <?php echo htmlspecialchars(app_full_url($currentScreen)); ?>
@@ -606,7 +438,7 @@ sort($files);
             <?php echo htmlspecialchars($currentScreen); ?>
         </h2>
 
-        <form method="POST" enctype="multipart/form-data">
+        <form class="upload-form" method="POST" enctype="multipart/form-data">
             <input
                 type="file"
                 name="media"
@@ -621,7 +453,7 @@ sort($files);
     </section>
 
     <section class="card">
-        <h2>Huidige media</h2>
+        <div class="card-heading"><h2>Huidige media</h2><p class="card-description">Beheer bestanden en pas de weergavetijd van afbeeldingen aan.</p></div>
 
         <?php if (empty($files)): ?>
             <p class="empty">

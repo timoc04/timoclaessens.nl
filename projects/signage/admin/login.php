@@ -21,111 +21,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>Signage Login</title>
-
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #111827, #1e3a8a);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .login-card {
-            width: 100%;
-            max-width: 400px;
-            background: white;
-            border-radius: 18px;
-            padding: 36px;
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
-        }
-
-        h1 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 30px;
-            color: #111827;
-        }
-
-        p {
-            color: #6b7280;
-            margin-bottom: 24px;
-        }
-
-        input[type="password"] {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 14px;
-            border: 1px solid #d1d5db;
-            border-radius: 10px;
-            margin-bottom: 18px;
-            font-size: 15px;
-        }
-
-        button {
-            width: 100%;
-            border: none;
-            background: #2563eb;
-            color: white;
-            padding: 14px;
-            border-radius: 10px;
-            font-size: 15px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        button:hover {
-            background: #1d4ed8;
-        }
-
-        .error {
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 18px;
-        }
-
-        .footer {
-            margin-top: 22px;
-            text-align: center;
-            color: #9ca3af;
-            font-size: 13px;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inloggen | Signage beheer</title>
+    <link rel="icon" type="image/svg+xml" href="../../../assets/icons/favicon.svg">
+    <link rel="stylesheet" href="admin.css">
 </head>
-
 <body>
-
-<div class="login-card">
-    <h1>Signage beheer</h1>
-
-    <p>Log in om media te uploaden en beheren.</p>
-
-    <?php if ($error): ?>
-        <div class="error">
-            <?php echo htmlspecialchars($error); ?>
-        </div>
-    <?php endif; ?>
-
-    <form method="POST">
-        <input type="password"
-               name="password"
-               placeholder="Wachtwoord"
-               required>
-
-        <button type="submit">
-            Inloggen
-        </button>
-    </form>
-
-    <div class="footer">
-        TimoClaessens.nl Signage
+<main class="login-layout">
+    <div class="login-shell">
+        <a class="brand login-brand" href="../../../index.html" aria-label="Timo Claessens homepage">
+            <span class="monogram">tc<span>.</span></span>
+            <span>Timo Claessens <span aria-hidden="true">/</span> Signage</span>
+        </a>
+        <section class="login-card" aria-labelledby="login-title">
+            <p class="eyebrow">Signage / Administration</p>
+            <h1 id="login-title">Welkom <em>terug.</em></h1>
+            <p>Log in om schermen, media en weergavetijden te beheren.</p>
+            <?php if ($error): ?>
+                <div class="error" role="alert"><?php echo htmlspecialchars($error); ?></div>
+            <?php endif; ?>
+            <form method="POST">
+                <label for="password">Wachtwoord</label>
+                <input id="password" type="password" name="password" autocomplete="current-password" placeholder="Voer je wachtwoord in" required>
+                <button type="submit">Inloggen</button>
+            </form>
+        </section>
+        <p class="login-footer">TimoClaessens.nl Signage</p>
     </div>
-</div>
-
+</main>
 </body>
 </html>
