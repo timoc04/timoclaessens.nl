@@ -11,7 +11,8 @@ PAGES = [
 ]
 ASSETS = [
     "assets/css/style.css", "privacy/privacy.css", "assets/js/main.js",
-    "assets/icons/favicon.svg", "projects/signage/admin/admin.css",
+    "assets/icons/favicon.svg", "assets/icons/apple-touch-icon.png",
+    "projects/signage/admin/admin.css",
 ]
 
 def version(path):
@@ -31,6 +32,8 @@ for page_name in PAGES:
         else:
             url = "/" + asset
         if url is None:
+            continue
+        if not (ROOT / asset).exists():
             continue
         pattern = r'(?P<q>["\x27])' + re.escape(url) + r'(?:\?v=[^"\x27]*)?(?P=q)'
         replacement = lambda match: match.group("q") + url + "?v=" + version(ROOT / asset) + match.group("q")

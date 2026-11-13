@@ -34,17 +34,30 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install SVG renderer
+        run: python3 -m pip install "cairosvg==2.7.1"
+
+      - name: Generate home screen icons from favicon
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import cairosvg
+          source = Path("assets/icons/favicon.svg")
+          for size, filename in [(180, "apple-touch-icon.png"), (192, "icon-192.png"), (512, "icon-512.png")]:
+              cairosvg.svg2png(url=str(source), write_to=str(source.parent / filename), output_width=size, output_height=size)
+          PY
+
       - name: Refresh content hashes
         run: python3 scripts/version_assets.py
 
       - name: Commit updated asset URLs
         run: |
-          if git diff --quiet -- index.html privacy/index.html projects/signage/admin/index.php projects/signage/admin/login.php; then
+          git add index.html privacy/index.html projects/signage/admin/index.php projects/signage/admin/login.php assets/icons/*.png
+          if git diff --cached --quiet; then
             echo "Asset versions are already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html privacy/index.html projects/signage/admin/index.php projects/signage/admin/login.php
           git commit -m "chore: refresh asset cache versions [skip ci]"
           git push origin HEAD:main
