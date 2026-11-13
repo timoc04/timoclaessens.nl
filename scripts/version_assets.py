@@ -11,7 +11,8 @@ PAGES = [
 ]
 ASSETS = [
     "assets/css/style.css", "privacy/privacy.css", "assets/js/main.js",
-    "assets/icons/favicon.svg", "assets/icons/apple-touch-icon.png",\n    "projects/signage/admin/admin.css",
+    "assets/icons/favicon.svg", "assets/icons/apple-touch-icon.png",
+    "projects/signage/admin/admin.css",
 ]
 
 def version(path):
