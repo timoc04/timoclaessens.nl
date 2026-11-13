@@ -328,7 +328,7 @@ sort($files);
     <title>Signage Admin</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/svg+xml" href="../../../assets/icons/favicon.svg?v=84d0dcc">
+    <link rel="icon" type="image/svg+xml" href="../../../assets/icons/favicon.svg?v=f4139c4">
     <link rel="stylesheet" href="admin.css?v=33ea597">
 
 </head>
@@ -339,7 +339,7 @@ sort($files);
     <div class="header-inner">
         <div class="topbar">
             <a class="brand" href="../../../index.html" aria-label="Timo Claessens homepage">
-                <img class="monogram" src="../../../assets/icons/favicon.svg?v=84d0dcc" alt="tc. logo" width="38" height="38">
+                <img class="monogram" src="../../../assets/icons/favicon.svg?v=f4139c4" alt="tc. logo" width="38" height="38">
                 <span>Timo Claessens <span aria-hidden="true">/</span> Signage</span>
             </a>
             <nav class="top-links" aria-label="Beheeracties">
