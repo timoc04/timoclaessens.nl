@@ -1,4 +1,4 @@
-# TimoClaessens.nl
+# timoclaessens.nl
 
 Personal portfolio website of **Timo Claessens**, showcasing ICT projects, interests and contact details.
 
