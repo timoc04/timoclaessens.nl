@@ -33,6 +33,7 @@ The repository also contains a **separate PHP-based digital signage application*
 | Favicon | SVG | Scalable `tc.` logo |
 | Signage application | PHP, HTML, CSS and JavaScript | Separate media player and administration interface |
 | Version control | Git and GitHub | Source management and change review |
+| Cache-busting | Python and GitHub Actions | Automatically version CSS, JavaScript and SVG asset URLs |
 | Hosting | Junda (cPanel) | Live hosting; deployment method must be configured separately |
 
 The portfolio itself has no npm dependencies, database, build step or third-party analytics scripts in its source code. Hosting services may still process technical requests and logs.
@@ -41,7 +42,7 @@ The portfolio itself has no npm dependencies, database, build step or third-part
 
 ```text
 timoclaessens.nl/
-├── index.html                    # Main portfolio
+├── .github/workflows/\n│   └── cache-busting.yml         # Automatic asset-version updates\n├── scripts/\n│   └── version_assets.py         # Generates content-based asset hashes\n├── index.html                    # Main portfolio
 ├── README.md                     # This documentation
 ├── assets/
 │   ├── css/
@@ -147,7 +148,7 @@ These variables control the main colour palette and page width. Other CSS rules 
 
 ### Change the favicon
 
-The favicon lives at `assets/icons/favicon.svg` and is referenced by both the homepage and privacy page. Update the SVG to change the logo. If browsers keep displaying a cached icon, change the version query string in both HTML files (for example `favicon.svg?v=3`) and refresh.
+The favicon lives at `assets/icons/favicon.svg` and is also used for the visible `tc.` logos across the portfolio and signage administration. Replace this SVG to update the shared logo. Asset version query strings are maintained automatically by the cache-busting workflow described below; do not normally edit them manually.
 
 The repository currently uses an SVG favicon rather than separate legacy ICO or Apple touch icon files.
 
@@ -186,19 +187,56 @@ If the branch already exists locally, use `git switch branch-name` instead. Comm
 
 ## Deployment to Junda
 
-The public portfolio is hosted separately from GitHub. **Merging into `main` does not, by itself, guarantee a live deployment.** Whether it is published automatically depends on your hosting and deployment configuration.
+The website is hosted at Junda and its repository is connected to **cPanel Git Version Control**. Publishing still requires a manual **Pull or Update** in cPanel.
 
-For a manual deployment using cPanel:
+1. Merge the reviewed pull request into `main`.
+2. Wait for the **Update asset cache versions** GitHub Actions workflow to complete. It may add another commit to `main`.
+3. In **cPanel → Git Version Control**, open the repository and select **Pull or Update** to retrieve the latest changes.
+4. Verify that the live document root serves the updated files. If your cPanel setup uses a separate deployment step, complete that step as well.
+5. Check the homepage, privacy page, logo, mobile navigation and signage admin in a browser.
 
-1. Back up the live files first.
-2. Confirm the document root configured for `timoclaessens.nl` in cPanel.
-3. Upload the changed `index.html`, `assets/` files and `privacy/` files to their corresponding locations.
-4. Preserve existing application directories, especially `projects/signage/`, and any server-side configuration.
-5. Verify the homepage, privacy page, favicon, mobile navigation and external links in the browser.
+**Do not overwrite untracked server-side configuration, passwords or uploaded signage media.** A Git pull updates the repository checkout; whether those files are immediately live depends on the configured document root and any cPanel deployment setup.
 
-**Do not blindly delete or replace the entire hosting document root.** Some files on the hosting server may be deliberately untracked in Git, including private configuration and uploaded media.
+## Automatic asset cache-busting
 
-An automated GitHub Actions deployment could be added later, but is **not documented here as an existing configured pipeline**.
+The website uses content-based cache-busting to prevent browsers from retaining outdated CSS, JavaScript or SVG logos after an update. Asset URLs include a seven-character hash derived from the file's Git blob content, for example:
+
+```html
+<link rel="stylesheet" href="/assets/css/style.css?v=77e1e34">
+```
+
+The hash changes **only when that asset's contents change**, so unchanged files can still benefit from browser caching. The hash is not a timestamp or the overall commit SHA.
+
+### How it works
+
+1. Changes to the configured website or signage administration paths are merged or pushed to `main`.
+2. GitHub Actions runs `.github/workflows/cache-busting.yml` and executes `python3 scripts/version_assets.py`.
+3. The script calculates hashes for the configured CSS, JavaScript and SVG assets and updates their references in the homepage, privacy page, signage admin and login pages.
+4. If any references changed, the workflow commits those HTML/PHP updates back to `main` using `github-actions[bot]`.
+5. **Wait for the workflow to finish**, then use **cPanel → Git Version Control → Pull or Update** to retrieve the latest commit on Junda. This workflow does **not** deploy files to the hosting server.
+
+The workflow also supports manual execution under **GitHub → Actions → Update asset cache versions → Run workflow**. A bot-created commit does not start the workflow again.
+
+### Files covered
+
+| Asset | Used by |
+| --- | --- |
+| `assets/css/style.css` | Portfolio and privacy pages |
+| `privacy/privacy.css` | Privacy page |
+| `assets/js/main.js` | Portfolio and privacy pages |
+| `assets/icons/favicon.svg` | Favicon and visible `tc.` logos |
+| `projects/signage/admin/admin.css` | Signage administration and login |
+
+The fullscreen signage player and screen settings are not modified by this process.
+
+### Maintenance and troubleshooting
+
+- **New or renamed assets:** add their paths and page references to `scripts/version_assets.py`; update the workflow's path filters if necessary.
+- **Permissions:** the workflow needs permission to write to the repository. Check **Settings → Actions → General → Workflow permissions** and any branch protection rules if its commit fails.
+- **Failed workflow:** inspect the run logs in GitHub Actions, fix the issue and rerun it before pulling in cPanel.
+- **Local use:** run `python3 scripts/version_assets.py` from the repository root if you want to refresh versions locally; review and commit the resulting changes.
+- **Dependencies:** the script uses Python's standard library. The workflow uses `actions/checkout@v4` and `actions/setup-python@v5`, which may occasionally need updates.
+- **Caching:** URL versioning helps browsers fetch changed assets, but the live site must still serve the latest HTML/PHP. If a visitor sees old references, inspect hosting/CDN HTML caching separately.
 
 ## Digital signage application
 
@@ -231,7 +269,7 @@ See `projects/signage/README.md` for the application's own (currently minimal) d
 
 ## Maintenance
 
-The portfolio has no dependency installation or build artefacts to maintain. Regular maintenance mainly involves keeping project content current, checking links, reviewing the privacy policy and testing responsive layouts after design changes.
+The portfolio has no dependency installation or build artefacts to maintain. Regular maintenance mainly involves keeping project content current, checking links, reviewing the privacy policy and testing responsive layouts after design changes. The cache-busting workflow normally needs no intervention unless assets or paths change, permissions fail, or its GitHub Actions dependencies require updating.
 
 ## Contact
 
