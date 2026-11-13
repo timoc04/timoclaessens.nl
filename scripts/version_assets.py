@@ -33,7 +33,9 @@ for page_name in PAGES:
             url = "/" + asset
         if url is None:
             continue
-        if not (ROOT / asset).exists():\n            continue\n        pattern = r'(?P<q>["\x27])' + re.escape(url) + r'(?:\?v=[^"\x27]*)?(?P=q)'
+        if not (ROOT / asset).exists():
+            continue
+        pattern = r'(?P<q>["\x27])' + re.escape(url) + r'(?:\?v=[^"\x27]*)?(?P=q)'
         replacement = lambda match: match.group("q") + url + "?v=" + version(ROOT / asset) + match.group("q")
         source = re.sub(pattern, replacement, source)
     page.write_text(source, encoding="utf-8")
