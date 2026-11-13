@@ -339,7 +339,7 @@ sort($files);
     <div class="header-inner">
         <div class="topbar">
             <a class="brand" href="../../../index.html" aria-label="Timo Claessens homepage">
-                <span class="monogram">tc<span>.</span></span>
+                <img class="monogram" src="../../../assets/icons/favicon.svg" alt="tc. logo" width="38" height="38">
                 <span>Timo Claessens <span aria-hidden="true">/</span> Signage</span>
             </a>
             <nav class="top-links" aria-label="Beheeracties">

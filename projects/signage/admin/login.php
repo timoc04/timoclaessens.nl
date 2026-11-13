@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <main class="login-layout">
     <div class="login-shell">
         <a class="brand login-brand" href="../../../index.html" aria-label="Timo Claessens homepage">
-            <span class="monogram">tc<span>.</span></span>
+            <img class="monogram" src="../../../assets/icons/favicon.svg" alt="tc. logo" width="38" height="38">
             <span>Timo Claessens <span aria-hidden="true">/</span> Signage</span>
         </a>
         <section class="login-card" aria-labelledby="login-title">
