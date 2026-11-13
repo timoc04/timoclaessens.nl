@@ -3,8 +3,7 @@
 Personal portfolio website of **Timo Claessens**, showcasing ICT projects, interests and contact details.
 
 **Website:** https://timoclaessens.nl  
-**Repository:** https://github.com/timoc04/timoclaessens.nl  
-**Language:** British English (portfolio and privacy policy)
+**Repository:** https://github.com/timoc04/timoclaessens.nl
 
 ## Overview
 
