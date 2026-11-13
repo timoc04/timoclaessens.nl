@@ -151,6 +151,24 @@ The favicon lives at `assets/icons/favicon.svg` and is also used for the visible
 
 The repository currently uses an SVG favicon rather than separate legacy ICO or Apple touch icon files.
 
+### Home screen icons (iOS and Android)
+
+The website supports **Add to Home Screen** shortcuts on iPhone, iPad and Android. The home screen icons are derived from the same `assets/icons/favicon.svg` design used for the browser favicon and visible `tc.` branding.
+
+| File | Purpose |
+| --- | --- |
+| `assets/icons/favicon.svg` | Source logo and browser favicon |
+| `assets/icons/apple-touch-icon.png` | 180 × 180 PNG for iOS/iPadOS |
+| `assets/icons/icon-192.png` | 192 × 192 PNG for Android |
+| `assets/icons/icon-512.png` | 512 × 512 PNG for Android |
+| `site.webmanifest` | Web app name, colours, display mode and Android icon references |
+
+The homepage and privacy page link to the Apple Touch Icon and web app manifest. The existing GitHub Actions cache-busting workflow uses CairoSVG to **generate the PNG files from the SVG** and commits any changes to `main`. The Apple icon URL is also content-versioned. Do not edit the generated PNGs directly; change `favicon.svg` instead.
+
+**After merging an icon change:** wait for GitHub Actions to finish, then pull the latest `main` in cPanel. On iPhone, remove the existing home screen shortcut and add the site again using **Safari → Share → Add to Home Screen**, since iOS may keep an older icon.
+
+**Checks and maintenance:** verify that all three PNG URLs return images, the web manifest is accessible, and the icon is legible on light and dark home screens. If the workflow fails, inspect its Actions log and check repository write permissions and the CairoSVG dependency. The manifest's `display: standalone` setting makes supported home screen launches look app-like; it does not turn the website into a fully offline-capable PWA.
+
 ### Update the privacy policy
 
 Edit `privacy/index.html` to update the policy text, contact details and revision date. Privacy-specific visual rules are in `privacy/privacy.css`, while shared styles come from `assets/css/style.css`.
@@ -224,6 +242,7 @@ The workflow also supports manual execution under **GitHub → Actions → Updat
 | `privacy/privacy.css` | Privacy page |
 | `assets/js/main.js` | Portfolio and privacy pages |
 | `assets/icons/favicon.svg` | Favicon and visible `tc.` logos |
+| `assets/icons/apple-touch-icon.png` | iOS/iPadOS home screen icon |
 | `projects/signage/admin/admin.css` | Signage administration and login |
 
 The fullscreen signage player and screen settings are not modified by this process.
@@ -261,6 +280,7 @@ See `projects/signage/README.md` for the application's own (currently minimal) d
 - [ ] Contact email addresses are correct.
 - [ ] Privacy policy matches actual data processing and hosting.
 - [ ] SVG favicon loads on both pages.
+- [ ] Apple Touch Icon and Android manifest icons load correctly after the Actions workflow.
 - [ ] Browser console shows no unexpected errors.
 - [ ] Signage player and admin remain functional.
 - [ ] Hosting document root and deployment scope are confirmed.
