@@ -1,4 +1,11 @@
 RewriteEngine On
+
+# Canonical signage host: redirect requests through the portfolio path.
+# In this directory's .htaccess, RewriteRule sees only the path relative
+# to projects/signage, so subpaths such as admin/ are preserved.
+RewriteCond %{HTTP_HOST} ^(www\.)?timoclaessens\.nl$ [NC]
+RewriteRule ^(.*)$ https://signage.timoclaessens.nl/$1 [R=301,L,NE]
+
 RewriteBase /
 
 DirectoryIndex index.php
