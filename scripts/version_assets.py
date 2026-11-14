@@ -26,7 +26,7 @@ for page_name in PAGES:
     for asset in ASSETS:
         if page_name.startswith("projects/signage/"):
             url = {
-                "assets/icons/favicon.svg": "../../../assets/icons/favicon.svg",
+                "assets/icons/favicon.svg": "https://timoclaessens.nl/assets/icons/favicon.svg",
                 "projects/signage/admin/admin.css": "admin.css",
             }.get(asset)
         else:
