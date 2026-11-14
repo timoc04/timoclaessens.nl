@@ -23,14 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Inloggen | Signage beheer</title>
-    <link rel="icon" type="image/svg+xml" href="../../../assets/icons/favicon.svg?v=f4139c4">
+    <link rel="icon" type="image/svg+xml" href="https://timoclaessens.nl/assets/icons/favicon.svg?v=f4139c4">
     <link rel="stylesheet" href="admin.css?v=33ea597">
 </head>
 <body>
 <main class="login-layout">
     <div class="login-shell">
         <a class="brand login-brand" href="../../../index.html" aria-label="Timo Claessens homepage">
-            <img class="monogram" src="../../../assets/icons/favicon.svg?v=f4139c4" alt="tc. logo" width="38" height="38">
+            <img class="monogram" src="https://timoclaessens.nl/assets/icons/favicon.svg?v=f4139c4" alt="tc. logo" width="38" height="38">
             <span>Timo Claessens <span aria-hidden="true">/</span> Signage</span>
         </a>
         <section class="login-card" aria-labelledby="login-title">
