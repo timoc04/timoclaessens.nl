@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PAGES = [
     "index.html", "privacy/index.html",
     "projects/signage/admin/index.php", "projects/signage/admin/login.php",
+    "projects/signage/index.php",
 ]
 ASSETS = [
     "assets/css/style.css", "privacy/privacy.css", "assets/js/main.js",
@@ -27,7 +28,13 @@ for page_name in PAGES:
         if page_name.startswith("projects/signage/"):
             url = {
                 "assets/icons/favicon.svg": "https://timoclaessens.nl/assets/icons/favicon.svg",
+                "assets/icons/apple-touch-icon.png": "https://timoclaessens.nl/assets/icons/apple-touch-icon.png",
                 "projects/signage/admin/admin.css": "admin.css",
+            }.get(asset)
+        elif page_name == "projects/signage/index.php":
+            url = {
+                "assets/icons/favicon.svg": "https://timoclaessens.nl/assets/icons/favicon.svg",
+                "assets/icons/apple-touch-icon.png": "https://timoclaessens.nl/assets/icons/apple-touch-icon.png",
             }.get(asset)
         else:
             url = "/" + asset
