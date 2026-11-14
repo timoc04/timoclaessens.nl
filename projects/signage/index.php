@@ -52,9 +52,9 @@ if (is_dir($mediaDir)) {
 <html>
 <head>
     <title>Signage Player</title>
-    <link rel="apple-touch-icon" sizes="180x180" href="https://timoclaessens.nl/assets/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://timoclaessens.nl/assets/icons/apple-touch-icon.png?v=ed1fe7e">
     <link rel="manifest" href="/signage.webmanifest">
-    <link rel="icon" type="image/svg+xml" href="https://timoclaessens.nl/assets/icons/favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="https://timoclaessens.nl/assets/icons/favicon.svg?v=f4139c4">
 
     <style>
         html, body {
