@@ -7,18 +7,21 @@ $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     signage_verify_csrf();
+    $username = trim((string)($_POST['username'] ?? ''));
     $password = (string)($_POST['password'] ?? '');
+    $authenticatedUser = signage_login_allowed() ? signage_authenticate($username, $password) : null;
 
-    if (signage_login_allowed() && signage_password_matches($password)) {
+    if ($authenticatedUser !== null) {
         session_regenerate_id(true);
         unset($_SESSION['login_failures'], $_SESSION['login_window_start'], $_SESSION['login_locked_until']);
         $_SESSION['logged_in'] = true;
+        $_SESSION['username'] = $authenticatedUser;
         header('Location: ' . app_url('admin/'));
         exit;
     }
 
     if (signage_login_allowed()) signage_login_failed();
-    $error = signage_login_allowed() ? 'Onjuist wachtwoord.' : 'Te veel pogingen. Probeer het over 15 minuten opnieuw.';
+    $error = signage_login_allowed() ? 'Onjuiste gebruikersnaam of wachtwoord.' : 'Te veel pogingen. Probeer het over 15 minuten opnieuw.';
 }
 ?>
 
@@ -49,6 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
             <form method="POST">
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(signage_csrf_token(), ENT_QUOTES); ?>">
+                <label for="username">Gebruikersnaam</label>
+                <input id="username" type="text" name="username" autocomplete="username" maxlength="100" placeholder="Voer je gebruikersnaam in" required>
                 <label for="password">Wachtwoord</label>
                 <input id="password" type="password" name="password" autocomplete="current-password" placeholder="Voer je wachtwoord in" required>
                 <button type="submit">Inloggen</button>
