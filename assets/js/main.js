@@ -23,3 +23,25 @@ if (menuButton && nav) {
 }
 const year = document.querySelector('#year');
 if (year) year.textContent = String(new Date().getFullYear());
+
+// Load safe, plain-text portfolio updates. The original HTML remains a fallback.
+const cmsElements = document.querySelectorAll('[data-cms]');
+if (cmsElements.length) {
+  fetch('/admin/api/content.php', { cache: 'no-store', credentials: 'omit' })
+    .then(response => {
+      if (!response.ok) throw new Error('CMS content unavailable');
+      return response.json();
+    })
+    .then(content => {
+      if (!content || typeof content !== 'object' || Array.isArray(content)) return;
+      cmsElements.forEach(element => {
+        const key = element.getAttribute('data-cms');
+        if (typeof content[key] === 'string' && content[key].trim() !== '') {
+          element.textContent = content[key];
+        }
+      });
+    })
+    .catch(() => {
+      // Keep the content already in index.html when the CMS API is unavailable.
+    });
+}
