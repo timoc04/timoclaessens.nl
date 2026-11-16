@@ -185,6 +185,8 @@ try {
     exit('Scherminstellingen kunnen niet worden gelezen. Controleer settings.json op de server.');
 }
 
+// Keep the admin accessible when a media operation encounters a filesystem error.
+try {
 /**
  * Upload media file.
  */
@@ -234,9 +236,9 @@ if (
     && isset($_POST['duration_seconds'])
 ) {
     $fileName = basename($_POST['duration_file']);
-    $duration = (int) $_POST['duration_seconds'];
+    $duration = filter_var((string)$_POST['duration_seconds'], FILTER_VALIDATE_INT);
 
-    if ($duration < 1 || $duration > 86400) {
+    if ($duration === false || $duration < 1 || $duration > 86400) {
         $message = 'Weergavetijd moet minimaal 1 seconde zijn.';
     } elseif (!is_file($mediaDir . '/' . $fileName) || is_link($mediaDir . '/' . $fileName)) {
         $message = 'Bestand bestaat niet.';
@@ -319,6 +321,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_file'])) {
         $message = 'Bestand verwijderd.';
         }
     }
+}
+
+} catch (Throwable $exception) {
+    error_log('Signage admin media operation failed: ' . $exception->getMessage());
+    $message = 'Bewerking mislukt. Controleer de bestanden en probeer opnieuw.';
 }
 
 /**
