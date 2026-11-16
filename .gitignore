@@ -1,0 +1,14 @@
+# Local development and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+__pycache__/
+*.pyc
+
+# Private signage configuration and login rate-limit state
+/projects/signage/config.php
+/projects/signage/signage-private-security/
+/projects/signage/screens/*/settings.json
+/projects/signage/screens/*/media/*
+# Existing tracked example files remain tracked; this prevents adding new live media.
