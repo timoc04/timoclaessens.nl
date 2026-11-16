@@ -58,6 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p class="eyebrow">Signage / Administration</p>
             <h1 id="login-title">Welkom <em>terug.</em></h1>
             <p>Log in om schermen, media en weergavetijden te beheren.</p>
+            <?php if (isset($_GET['timeout']) && $_GET['timeout'] === '1'): ?>
+                <div class="error" role="status">Je sessie is verlopen. Log opnieuw in.</div>
+            <?php endif; ?>
             <?php if ($error): ?>
                 <div class="error" role="alert"><?php echo htmlspecialchars($error); ?></div>
             <?php endif; ?>
