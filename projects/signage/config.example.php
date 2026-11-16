@@ -1,6 +1,8 @@
 <?php
 
-const ADMIN_PASSWORD = 'WachtwoordHierInvullen!';
+// Generate with: php -r "echo password_hash('YOUR-STRONG-PASSWORD', PASSWORD_DEFAULT), PHP_EOL;"
+const ADMIN_PASSWORD_HASH = 'REPLACE_WITH_PASSWORD_HASH';
+// Legacy ADMIN_PASSWORD is temporarily supported for migration, but should be removed.
 
 /*
 |--------------------------------------------------------------------------
