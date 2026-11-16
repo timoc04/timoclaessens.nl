@@ -1,7 +1,7 @@
 <?php
-session_start();
-
 require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../includes/security.php';
+signage_start_session();
 
 $timeout = SESSION_TIMEOUT;
 
@@ -19,10 +19,12 @@ if (isset($_SESSION['last_activity'])) {
 
 $_SESSION['last_activity'] = time();
 
-if (!isset($_SESSION['logged_in'])) {
+if (($_SESSION['logged_in'] ?? false) !== true) {
     header('Location: ' . app_url('admin/login.php'));
     exit;
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') signage_verify_csrf();
 
 $message = '';
 
@@ -204,14 +206,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['media'])) {
         $message = 'Upload mislukt.';
     } else {
         $safeName = preg_replace('/[^a-zA-Z0-9._-]/', '_', basename($file['name']));
-        move_uploaded_file($file['tmp_name'], $mediaDir . '/' . $safeName);
-
+        $allowedMime = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp', 'mp4' => 'video/mp4'];
+        $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
+        $maxBytes = 100 * 1024 * 1024;
+        if ($file['size'] > $maxBytes || $file['size'] <= 0 ||
+            !isset($allowedMime[$extension]) || $mime !== $allowedMime[$extension]) {
+            $message = 'Ongeldig bestand of bestand groter dan 100 MB.';
+        } elseif (is_file($mediaDir . '/' . $safeName)) {
+            $message = 'Er bestaat al een bestand met deze naam.';
+        } elseif (!move_uploaded_file($file['tmp_name'], $mediaDir . '/' . $safeName)) {
+            $message = 'Opslaan van upload mislukt.';
+        } else {
         if (isImageFile($safeName)) {
             $settings[$safeName]['duration'] = IMAGE_DEFAULT_DURATION;
             saveSettings($settingsFile, $settings);
         }
 
         $message = 'Bestand geüpload.';
+        }
     }
 }
 
@@ -291,8 +303,8 @@ if (
 /**
  * Delete media file.
  */
-if (isset($_GET['delete'])) {
-    $fileToDelete = basename($_GET['delete']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_file'])) {
+    $fileToDelete = basename((string)$_POST['delete_file']);
     $path = $mediaDir . '/' . $fileToDelete;
 
     if (is_file($path)) {
@@ -384,6 +396,7 @@ sort($files);
             </form>
 
             <form method="POST">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(signage_csrf_token(), ENT_QUOTES); ?>">
                 <label>Nieuw scherm aanmaken</label>
 
                 <input
@@ -402,6 +415,7 @@ sort($files);
                 method="POST"
                 onsubmit="return confirm('Weet je zeker dat je dit scherm inclusief alle media wilt verwijderen?');"
             >
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(signage_csrf_token(), ENT_QUOTES); ?>">
                 <label>Huidig scherm verwijderen</label>
 
                 <input
@@ -441,6 +455,7 @@ sort($files);
         </h2>
 
         <form class="upload-form" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(signage_csrf_token(), ENT_QUOTES); ?>">
             <input
                 type="file"
                 name="media"
@@ -487,6 +502,7 @@ sort($files);
 
                             <?php if ($isImage): ?>
                                 <form class="rename-form" method="POST">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(signage_csrf_token(), ENT_QUOTES); ?>">
                                     <input
                                         type="hidden"
                                         name="duration_file"
@@ -512,6 +528,7 @@ sort($files);
                             <?php endif; ?>
 
                             <form class="rename-form" method="POST">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(signage_csrf_token(), ENT_QUOTES); ?>">
                                 <input
                                     type="hidden"
                                     name="rename_old"
@@ -530,13 +547,11 @@ sort($files);
                                 </button>
                             </form>
 
-                            <a
-                                class="delete"
-                                href="<?php echo htmlspecialchars(app_url('admin/?screen=' . urlencode($currentScreen) . '&delete=' . urlencode($file))); ?>"
-                                onclick="return confirm('Weet je zeker dat je dit bestand wilt verwijderen?');"
-                            >
-                                Verwijderen
-                            </a>
+                            <form method="POST" onsubmit="return confirm('Weet je zeker dat je dit bestand wilt verwijderen?');">
+                                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(signage_csrf_token(), ENT_QUOTES); ?>">
+                                <input type="hidden" name="delete_file" value="<?php echo htmlspecialchars($file, ENT_QUOTES); ?>">
+                                <button class="delete" type="submit">Verwijderen</button>
+                            </form>
                         </div>
                     </div>
                 <?php endforeach; ?>
