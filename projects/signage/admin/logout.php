@@ -3,23 +3,20 @@ require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../includes/security.php';
 signage_start_session();
 
-// Preserve the timeout reason only for the confirmation message.
-$timedOut = isset($_GET['timeout']) && $_GET['timeout'] === '1';
-
-// Clear all authentication/session data and expire the session cookie.
-$_SESSION = [];
-if (ini_get('session.use_cookies')) {
-    $cookie = session_get_cookie_params();
-    setcookie(session_name(), '', [
-        'expires' => time() - 42000,
-        'path' => $cookie['path'],
-        'domain' => $cookie['domain'],
-        'secure' => $cookie['secure'],
-        'httponly' => $cookie['httponly'],
-        'samesite' => $cookie['samesite'] ?? 'Lax',
-    ]);
+// Only authenticated, CSRF-protected POST requests may log out.
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Allow: POST');
+    http_response_code(405);
+    exit('Gebruik de uitlogknop in het beheerpaneel.');
 }
-session_destroy();
+if (!signage_session_valid()) {
+    signage_end_session();
+    header('Location: ' . app_url('admin/login.php'));
+    exit;
+}
+signage_verify_csrf();
+signage_end_session();
+$timedOut = false;
 ?>
 <!DOCTYPE html>
 <html lang="nl">
