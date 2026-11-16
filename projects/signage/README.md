@@ -47,3 +47,15 @@ See [SECURITY.md](SECURITY.md) for the detailed security verification list. GitH
 ## Development
 
 A static HTTP server cannot execute this application. Use a PHP-capable local environment with a private test `config.php`; never point tests at production media. The admin requires session cookies and CSRF tokens, so test its workflows through a browser.
+
+## Automated tests (Phase 2)
+
+Run the security regression suite locally with PHP 8+:
+
+```bash
+php projects/signage/tests/security_test.php
+```
+
+Run it from the repository root. The suite tests password verification, invalidated sessions and the shared IP login limiter. It creates a temporary, isolated rate-limit directory and removes it afterwards; it does not read production `config.php`, contact Junda or modify live media.
+
+GitHub Actions runs the same tests and PHP syntax checks for signage pull requests. These are unit-level checks; browser-based admin workflows and public playback still need manual verification before deployment.
