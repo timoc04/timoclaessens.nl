@@ -12,3 +12,7 @@ __pycache__/
 /projects/signage/screens/*/settings.json
 /projects/signage/screens/*/media/*
 # Existing tracked example files remain tracked; this prevents adding new live media.
+
+# Private portfolio CMS credentials and local content
+/admin/config.php
+/admin/data/
