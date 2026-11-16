@@ -1,6 +1,12 @@
 <?php
 
-const ADMIN_PASSWORD = 'WachtwoordHierInvullen!';
+// Generate a hash for EACH user locally with:
+// php -r '$password = readline("Password: "); echo password_hash($password, PASSWORD_DEFAULT), PHP_EOL;'
+// Copy the hashes below into your private server-side config.php; never commit real credentials.
+const SIGNAGE_USERS = [
+    'admin' => 'REPLACE_WITH_HASH_FOR_ADMIN',
+    // 'colleague' => 'REPLACE_WITH_HASH_FOR_COLLEAGUE',
+];
 
 /*
 |--------------------------------------------------------------------------

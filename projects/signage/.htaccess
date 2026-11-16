@@ -17,3 +17,7 @@ RewriteRule ^admin/?$ admin/index.php [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([a-zA-Z0-9_-]+)/?$ index.php?screen=$1 [L,QSA]
+# Prevent exposure of configuration and screen metadata.
+<FilesMatch "^(config(\.example)?\.php|settings\.json|\.ht.*)$">
+    Require all denied
+</FilesMatch>

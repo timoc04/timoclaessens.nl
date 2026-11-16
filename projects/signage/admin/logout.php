@@ -1,7 +1,7 @@
 <?php
-session_start();
-
 require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../includes/security.php';
+signage_start_session();
 
 session_destroy();
 ?>
