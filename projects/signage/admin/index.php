@@ -58,25 +58,23 @@ function getScreens(): array
 
 function deleteDirectory(string $dir): void
 {
-    if (!is_dir($dir)) {
-        return;
+    if (is_link($dir)) {
+        throw new RuntimeException('Symbolische links mogen niet worden verwijderd.');
     }
-
+    if (!is_dir($dir)) return;
     foreach (scandir($dir) as $item) {
-        if ($item === '.' || $item === '..') {
-            continue;
-        }
-
+        if ($item === '.' || $item === '..') continue;
         $path = $dir . '/' . $item;
-
+        if (is_link($path)) {
+            throw new RuntimeException('Symbolische link aangetroffen.');
+        }
         if (is_dir($path)) {
             deleteDirectory($path);
-        } else {
-            unlink($path);
+        } elseif (!unlink($path)) {
+            throw new RuntimeException('Bestand verwijderen mislukt.');
         }
     }
-
-    rmdir($dir);
+    if (!rmdir($dir)) throw new RuntimeException('Map verwijderen mislukt.');
 }
 
 function loadSettings(string $settingsFile): array
@@ -93,11 +91,10 @@ function loadSettings(string $settingsFile): array
 
 function saveSettings(string $settingsFile, array $settings): void
 {
-    file_put_contents(
-        $settingsFile,
-        json_encode($settings, JSON_PRETTY_PRINT),
-        LOCK_EX
-    );
+    $json = json_encode($settings, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+    if (file_put_contents($settingsFile, $json, LOCK_EX) === false) {
+        throw new RuntimeException('Instellingen opslaan mislukt.');
+    }
 }
 
 function isImageFile(string $file): bool
@@ -152,8 +149,12 @@ if (
     } elseif (count($availableScreens) <= 1) {
         $message = 'Je kunt het laatste scherm niet verwijderen.';
     } else {
-        deleteDirectory(SCREENS_DIR . '/' . $screenToDelete);
-        $message = 'Scherm verwijderd.';
+        try {
+            deleteDirectory(SCREENS_DIR . '/' . $screenToDelete);
+            $message = 'Scherm verwijderd.';
+        } catch (RuntimeException $exception) {
+            $message = 'Scherm kon niet volledig worden verwijderd.';
+        }
     }
 }
 
@@ -246,7 +247,7 @@ if (
 
     if ($duration < 1 || $duration > 86400) {
         $message = 'Weergavetijd moet minimaal 1 seconde zijn.';
-    } elseif (!is_file($mediaDir . '/' . $fileName)) {
+    } elseif (!is_file($mediaDir . '/' . $fileName) || is_link($mediaDir . '/' . $fileName)) {
         $message = 'Bestand bestaat niet.';
     } elseif (!isImageFile($fileName)) {
         $message = 'Weergavetijd kan alleen bij afbeeldingen worden aangepast.';
@@ -274,7 +275,7 @@ if (
 
     if ($newName === '') {
         $message = 'Nieuwe naam mag niet leeg zijn.';
-    } elseif (!is_file($oldPath)) {
+    } elseif (!is_file($oldPath) || is_link($oldPath)) {
         $message = 'Oorspronkelijk bestand bestaat niet.';
     } else {
         if (!str_contains($newName, '.')) {
@@ -317,7 +318,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_file'])) {
     $fileToDelete = basename((string)$_POST['delete_file']);
     $path = $mediaDir . '/' . $fileToDelete;
 
-    if (is_file($path)) {
+    if (is_file($path) && !is_link($path)) {
         if (!unlink($path)) {
             $message = 'Verwijderen mislukt.';
         } else {
@@ -337,7 +338,7 @@ $files = [];
 foreach (scandir($mediaDir) as $file) {
     $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 
-    if (in_array($extension, ALLOWED_EXTENSIONS, true)) {
+    if (is_file($mediaDir . '/' . $file) && !is_link($mediaDir . '/' . $file) && in_array($extension, ALLOWED_EXTENSIONS, true)) {
         $files[] = $file;
     }
 }
