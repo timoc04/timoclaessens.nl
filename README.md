@@ -61,9 +61,9 @@ Then visit `http://localhost:8000`. This previews **only the static portfolio**;
 
 ## Portfolio CMS (phase 1)
 
-A separate, optional PHP CMS at `/admin/` can edit the homepage introduction, About text, selected project titles/descriptions, expertise introduction and contact introduction. It keeps the existing static HTML as a fallback and loads published plain-text changes from `/admin/api/content.php`. It does **not** share signage accounts or configuration.
+A separate, optional PHP CMS at `/admin/` can edit the homepage introduction, About text, selected project titles, descriptions, URLs and technology tags, expertise introduction and contact introduction. It keeps the existing static HTML as a fallback and loads published plain-text changes from `/admin/api/content.php`. It does **not** share signage accounts or configuration.
 
-**Server-side setup is required before the CMS works:** create an untracked `admin/config.php` from `admin/config.example.php`, set a password-hashed account and a private writable storage directory outside `public_html`. See [CMS installation and safety notes](admin/README.md). Never commit real credentials or delete the private CMS storage during cPanel deployments. The initial phase does not cover images, project links, or server-side SEO rendering.
+**Server-side setup is required before the CMS works:** create an untracked `admin/config.php` from `admin/config.example.php`, set a password-hashed account and a private writable storage directory outside `public_html`. See [CMS installation and safety notes](admin/README.md). Never commit real credentials or delete the private CMS storage during cPanel deployments. Phase 2 also supports project links and tags. It does not yet cover images, adding/removing projects or server-side SEO rendering.
 
 ## Custom 404 page
 
