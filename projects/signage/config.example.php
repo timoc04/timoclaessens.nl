@@ -35,6 +35,9 @@ const IMAGE_DEFAULT_DURATION = 10;
 
 const SESSION_TIMEOUT = 1800;
 
+// Recommended: a writable directory OUTSIDE public_html for shared login throttling.
+// const SIGNAGE_SECURITY_DIR = '/home/YOUR_CPANEL_USER/signage-private-security';
+
 function app_url(string $path = ''): string
 {
     $base = rtrim(APP_BASE_PATH, '/');
