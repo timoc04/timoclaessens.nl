@@ -1,0 +1,39 @@
+name: Signage PHP security checks
+
+on:
+  pull_request:
+    paths:
+      - 'projects/signage/**'
+      - '.github/workflows/signage-security.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'projects/signage/**'
+      - '.github/workflows/signage-security.yml'
+
+jobs:
+  php-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+      - name: Check PHP syntax
+        run: |
+          find projects/signage -type f -name '*.php' ! -name 'config.php' -print0 | xargs -0 -n1 php -l
+      - name: Verify password hashing and session revocation
+        run: |
+          php -r '
+            require "projects/signage/includes/security.php";
+            define("SIGNAGE_USERS", ["test" => password_hash("test-password", PASSWORD_DEFAULT)]);
+            if (signage_authenticate("test", "test-password") !== "test") exit(1);
+            if (signage_authenticate("test", "wrong") !== null) exit(1);
+            $_SESSION = ["logged_in" => true, "username" => "test", "account_fingerprint" => hash("sha256", SIGNAGE_USERS["test"])];
+            if (!signage_session_valid()) exit(1);
+            $_SESSION["account_fingerprint"] = "revoked";
+            if (signage_session_valid()) exit(1);
+            echo "Security smoke checks passed\n";
+          '
