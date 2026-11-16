@@ -63,7 +63,7 @@ if (cmsElements.length) {
           span.textContent = tag;
           return span;
         }));
-
+      });
     })
     .catch(() => {
       // Keep the content already in index.html when the CMS API is unavailable.
