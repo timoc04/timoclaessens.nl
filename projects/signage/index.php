@@ -21,7 +21,9 @@ function loadSettings(string $settingsFile): array
     return is_array($settings) ? $settings : [];
 }
 
-$screen = sanitizeScreenName($_GET['screen'] ?? 'main');
+$requestedScreen = $_GET['screen'] ?? 'main';
+$screen = sanitizeScreenName(is_string($requestedScreen) ? $requestedScreen : 'main');
+if ($screen === '') $screen = 'main';
 
 $mediaDir = SCREENS_DIR . '/' . $screen . '/media';
 $settingsFile = SCREENS_DIR . '/' . $screen . '/settings.json';
@@ -32,19 +34,21 @@ $files = [];
 if (is_dir($mediaDir)) {
     $settings = loadSettings($settingsFile);
 
-    foreach (scandir($mediaDir) as $file) {
+    foreach (scandir($mediaDir) ?: [] as $file) {
+        $path = $mediaDir . '/' . $file;
         $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+        if (!is_file($path) || is_link($path) || !in_array($extension, ALLOWED_EXTENSIONS, true)) continue;
 
-        if (in_array($extension, ALLOWED_EXTENSIONS, true)) {
-            $files[] = [
-                'src' => $mediaUrl . '/' . $file,
-                'name' => $file,
-                'duration' => $settings[$file]['duration'] ?? IMAGE_DEFAULT_DURATION,
-            ];
-        }
+        $configuredDuration = $settings[$file]['duration'] ?? IMAGE_DEFAULT_DURATION;
+        $duration = is_numeric($configuredDuration) ? (int)$configuredDuration : IMAGE_DEFAULT_DURATION;
+        $files[] = [
+            'src' => $mediaUrl . '/' . rawurlencode($file),
+            'name' => $file,
+            'duration' => max(1, min(86400, $duration)),
+        ];
     }
 
-    sort($files);
+    usort($files, static fn($a, $b) => strcmp($a['name'], $b['name']));
 }
 ?>
 
@@ -88,130 +92,122 @@ if (is_dir($mediaDir)) {
 <div id="player"></div>
 
 <script>
-const media = <?php echo json_encode($files); ?>;
-
+const media = <?php echo json_encode($files, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE); ?>;
+const player = document.getElementById("player");
+const EMPTY_RETRY_MS = 30000;
+const VIDEO_START_TIMEOUT_MS = 15000;
+const VIDEO_MAX_RUNTIME_MS = 4 * 60 * 60 * 1000;
 let index = 0;
+let playbackTimer = null;
 
-function preloadNext(nextIndex) {
-    const item = media[nextIndex];
-
-    if (!item) {
-        return;
+function clearPlaybackTimer() {
+    if (playbackTimer !== null) {
+        clearTimeout(playbackTimer);
+        playbackTimer = null;
     }
+}
 
-    const file = item.src;
-
-    if (file.toLowerCase().endsWith(".mp4")) {
-        const video = document.createElement("video");
-
-        video.src = file;
-        video.preload = "auto";
-    } else {
-        const img = new Image();
-
-        img.src = file;
-    }
+function showMessage(message) {
+    player.replaceChildren();
+    const element = document.createElement("div");
+    element.id = "message";
+    element.textContent = message;
+    player.appendChild(element);
 }
 
 function reloadAfterPlaylist() {
-    setTimeout(function () {
-        location.reload();
-    }, 1000);
+    clearPlaybackTimer();
+    playbackTimer = setTimeout(() => location.reload(), 1000);
+}
+
+function preloadNext(nextIndex) {
+    const item = media[nextIndex];
+    if (!item) return;
+    if (item.src.toLowerCase().endsWith(".mp4")) {
+        // Preloading an entire video can waste bandwidth on always-on screens.
+        return;
+    }
+    const image = new Image();
+    image.src = item.src;
+}
+
+function advance() {
+    clearPlaybackTimer();
+    index = (index + 1) % media.length;
+    if (index === 0) {
+        reloadAfterPlaylist();
+    } else {
+        // Schedule instead of recursing when several files are broken.
+        playbackTimer = setTimeout(showNext, 0);
+    }
 }
 
 function showNext() {
-    const player = document.getElementById("player");
-
+    clearPlaybackTimer();
     if (media.length === 0) {
-        player.innerHTML =
-            "<div id='message'>Geen media beschikbaar</div>";
-
+        showMessage("Geen media beschikbaar");
+        playbackTimer = setTimeout(() => location.reload(), EMPTY_RETRY_MS);
         return;
     }
 
     const item = media[index];
-    const file = item.src;
+    preloadNext((index + 1) % media.length);
 
-    const nextIndex = (index + 1) % media.length;
-
-    preloadNext(nextIndex);
-
-    if (file.toLowerCase().endsWith(".mp4")) {
+    if (item.src.toLowerCase().endsWith(".mp4")) {
         const video = document.createElement("video");
-
-        let movedToNext = false;
-
-        function goNextOnce() {
-            if (movedToNext) {
-                return;
-            }
-
-            movedToNext = true;
-
-            if (nextIndex === 0) {
-                reloadAfterPlaylist();
-            } else {
-                index = nextIndex;
-                showNext();
-            }
+        let finished = false;
+        let startTimer = null;
+        function finish() {
+            if (finished) return;
+            finished = true;
+            clearTimeout(startTimer);
+            video.pause();
+            video.removeAttribute("src");
+            video.load();
+            advance();
         }
 
-        video.src = file;
         video.autoplay = true;
         video.muted = true;
         video.playsInline = true;
         video.preload = "auto";
-
-        video.onended = goNextOnce;
-        video.onerror = goNextOnce;
-
-        video.onloadedmetadata = function () {
-            const fallbackTime = (video.duration + 2) * 1000;
-
-            setTimeout(function () {
-                goNextOnce();
-            }, fallbackTime);
+        video.onended = finish;
+        video.onerror = finish;
+        video.onplaying = () => {
+            clearTimeout(startTimer);
+            clearPlaybackTimer();
+            const seconds = Number.isFinite(video.duration) && video.duration > 0
+                ? video.duration + 5 : VIDEO_MAX_RUNTIME_MS / 1000;
+            playbackTimer = setTimeout(finish, Math.min(seconds * 1000, VIDEO_MAX_RUNTIME_MS));
         };
-
-        player.innerHTML = "";
-        player.appendChild(video);
-
-        video.load();
-
-        video.play().catch(function () {
-            goNextOnce();
-        });
-
+        video.src = item.src;
+        player.replaceChildren(video);
+        startTimer = setTimeout(finish, VIDEO_START_TIMEOUT_MS);
+        video.play().catch(finish);
     } else {
-        const img = document.createElement("img");
-
-        img.src = file;
-
-        img.onload = function () {
-            player.innerHTML = "";
-            player.appendChild(img);
-
-            setTimeout(function () {
-
-                if (nextIndex === 0) {
-                    reloadAfterPlaylist();
-                } else {
-                    index = nextIndex;
-                    showNext();
-                }
-
+        const img = new Image();
+        let finished = false;
+        const loadTimer = setTimeout(() => {
+            if (finished) return;
+            finished = true;
+            advance();
+        }, VIDEO_START_TIMEOUT_MS);
+        img.onload = () => {
+            clearTimeout(loadTimer);
+            if (finished) return;
+            player.replaceChildren(img);
+            playbackTimer = setTimeout(() => {
+                finished = true;
+                advance();
             }, item.duration * 1000);
         };
-
-        img.onerror = function () {
-
-            if (nextIndex === 0) {
-                reloadAfterPlaylist();
-            } else {
-                index = nextIndex;
-                showNext();
-            }
+        img.onerror = () => {
+            clearTimeout(loadTimer);
+            if (finished) return;
+            finished = true;
+            advance();
         };
+        img.src = item.src;
     }
 }
 

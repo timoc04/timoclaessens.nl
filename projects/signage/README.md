@@ -59,3 +59,9 @@ php projects/signage/tests/security_test.php
 Run it from the repository root. The suite tests password verification, invalidated sessions and the shared IP login limiter. It creates a temporary, isolated rate-limit directory and removes it afterwards; it does not read production `config.php`, contact Junda or modify live media.
 
 GitHub Actions runs the same tests and PHP syntax checks for signage pull requests. These are unit-level checks; browser-based admin workflows and public playback still need manual verification before deployment.
+
+## Player reliability
+
+The player skips missing or unreadable media, limits image/video startup waits to 15 seconds, and reloads the playlist after a full cycle. An empty playlist displays a message and retries after 30 seconds, so a screen can recover when media is added later. Image durations are validated and constrained server-side. Playback stays fullscreen.
+
+After deploying player changes, manually test: an empty screen, a missing image, an invalid video, an image with an invalid duration, and a normal image/video playlist. These browser scenarios are not covered by the PHP security tests.
