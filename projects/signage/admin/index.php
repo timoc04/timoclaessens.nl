@@ -215,7 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['media'])) {
         $mime = is_uploaded_file($file['tmp_name'])
             ? (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']) : false;
         $maxBytes = 100 * 1024 * 1024;
-        if (!is_uploaded_file($file['tmp_name']) || $safeName === '' || $safeName[0] === '.' ||
+        if (!is_uploaded_file($file['tmp_name']) || $safeName === '' || $safeName[0] === '.' || substr_count($safeName, '.') !== 1 ||
             $file['size'] > $maxBytes || $file['size'] <= 0 ||
             !isset($allowedMime[$extension]) || $mime !== $allowedMime[$extension]) {
             $message = 'Ongeldig bestand of bestand groter dan 100 MB.';
@@ -292,7 +292,7 @@ if (
             $safeNewName = preg_replace('/[^a-zA-Z0-9._-]/', '_', basename($newName));
             $newPath = $mediaDir . '/' . $safeNewName;
 
-            if ($safeNewName === '' || $safeNewName[0] === '.' || file_exists($newPath)) {
+            if ($safeNewName === '' || $safeNewName[0] === '.' || substr_count($safeNewName, '.') !== 1 || file_exists($newPath)) {
                 $message = 'Er bestaat al een bestand met deze naam.';
             } else {
                 if (!rename($oldPath, $newPath)) {
