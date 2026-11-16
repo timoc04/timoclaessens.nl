@@ -9,17 +9,17 @@ if (isset($_SESSION['last_activity'])) {
     $inactiveTime = time() - $_SESSION['last_activity'];
 
     if ($inactiveTime > $timeout) {
-        session_unset();
-        session_destroy();
+        signage_end_session();
 
-        header('Location: ' . app_url('admin/logout.php?timeout=1'));
+        header('Location: ' . app_url('admin/login.php?timeout=1'));
         exit;
     }
 }
 
 $_SESSION['last_activity'] = time();
 
-if (($_SESSION['logged_in'] ?? false) !== true) {
+if (!signage_session_valid()) {
+    signage_end_session();
     header('Location: ' . app_url('admin/login.php'));
     exit;
 }
@@ -58,25 +58,23 @@ function getScreens(): array
 
 function deleteDirectory(string $dir): void
 {
-    if (!is_dir($dir)) {
-        return;
+    if (is_link($dir)) {
+        throw new RuntimeException('Symbolische links mogen niet worden verwijderd.');
     }
-
+    if (!is_dir($dir)) return;
     foreach (scandir($dir) as $item) {
-        if ($item === '.' || $item === '..') {
-            continue;
-        }
-
+        if ($item === '.' || $item === '..') continue;
         $path = $dir . '/' . $item;
-
+        if (is_link($path)) {
+            throw new RuntimeException('Symbolische link aangetroffen.');
+        }
         if (is_dir($path)) {
             deleteDirectory($path);
-        } else {
-            unlink($path);
+        } elseif (!unlink($path)) {
+            throw new RuntimeException('Bestand verwijderen mislukt.');
         }
     }
-
-    rmdir($dir);
+    if (!rmdir($dir)) throw new RuntimeException('Map verwijderen mislukt.');
 }
 
 function loadSettings(string $settingsFile): array
@@ -93,11 +91,10 @@ function loadSettings(string $settingsFile): array
 
 function saveSettings(string $settingsFile, array $settings): void
 {
-    file_put_contents(
-        $settingsFile,
-        json_encode($settings, JSON_PRETTY_PRINT),
-        LOCK_EX
-    );
+    $json = json_encode($settings, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+    if (file_put_contents($settingsFile, $json, LOCK_EX) === false) {
+        throw new RuntimeException('Instellingen opslaan mislukt.');
+    }
 }
 
 function isImageFile(string $file): bool
@@ -152,8 +149,12 @@ if (
     } elseif (count($availableScreens) <= 1) {
         $message = 'Je kunt het laatste scherm niet verwijderen.';
     } else {
-        deleteDirectory(SCREENS_DIR . '/' . $screenToDelete);
-        $message = 'Scherm verwijderd.';
+        try {
+            deleteDirectory(SCREENS_DIR . '/' . $screenToDelete);
+            $message = 'Scherm verwijderd.';
+        } catch (RuntimeException $exception) {
+            $message = 'Scherm kon niet volledig worden verwijderd.';
+        }
     }
 }
 
@@ -198,6 +199,10 @@ $settings = loadSettings($settingsFile);
  */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['media'])) {
     $file = $_FILES['media'];
+    if (!is_array($file) || !isset($file['name'], $file['tmp_name'], $file['size'], $file['error']) || !is_string($file['name'])) {
+        http_response_code(400);
+        exit('Ongeldige upload.');
+    }
     $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
     if (!in_array($extension, ALLOWED_EXTENSIONS, true)) {
@@ -207,12 +212,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['media'])) {
     } else {
         $safeName = preg_replace('/[^a-zA-Z0-9._-]/', '_', basename($file['name']));
         $allowedMime = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp', 'mp4' => 'video/mp4'];
-        $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
+        $mime = is_uploaded_file($file['tmp_name'])
+            ? (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']) : false;
         $maxBytes = 100 * 1024 * 1024;
-        if ($file['size'] > $maxBytes || $file['size'] <= 0 ||
+        if (!is_uploaded_file($file['tmp_name']) || $safeName === '' || $safeName[0] === '.' || substr_count($safeName, '.') !== 1 ||
+            $file['size'] > $maxBytes || $file['size'] <= 0 ||
             !isset($allowedMime[$extension]) || $mime !== $allowedMime[$extension]) {
             $message = 'Ongeldig bestand of bestand groter dan 100 MB.';
-        } elseif (is_file($mediaDir . '/' . $safeName)) {
+        } elseif (file_exists($mediaDir . '/' . $safeName)) {
             $message = 'Er bestaat al een bestand met deze naam.';
         } elseif (!move_uploaded_file($file['tmp_name'], $mediaDir . '/' . $safeName)) {
             $message = 'Opslaan van upload mislukt.';
@@ -238,9 +245,9 @@ if (
     $fileName = basename($_POST['duration_file']);
     $duration = (int) $_POST['duration_seconds'];
 
-    if ($duration < 1) {
+    if ($duration < 1 || $duration > 86400) {
         $message = 'Weergavetijd moet minimaal 1 seconde zijn.';
-    } elseif (!is_file($mediaDir . '/' . $fileName)) {
+    } elseif (!is_file($mediaDir . '/' . $fileName) || is_link($mediaDir . '/' . $fileName)) {
         $message = 'Bestand bestaat niet.';
     } elseif (!isImageFile($fileName)) {
         $message = 'Weergavetijd kan alleen bij afbeeldingen worden aangepast.';
@@ -268,7 +275,7 @@ if (
 
     if ($newName === '') {
         $message = 'Nieuwe naam mag niet leeg zijn.';
-    } elseif (!is_file($oldPath)) {
+    } elseif (!is_file($oldPath) || is_link($oldPath)) {
         $message = 'Oorspronkelijk bestand bestaat niet.';
     } else {
         if (!str_contains($newName, '.')) {
@@ -277,17 +284,20 @@ if (
 
         $newExtension = strtolower(pathinfo($newName, PATHINFO_EXTENSION));
 
-        if (!in_array($newExtension, ALLOWED_EXTENSIONS, true)) {
+        if ($newExtension !== $oldExtension) {
+            $message = 'Bestandsextensie mag niet worden gewijzigd.';
+        } elseif (!in_array($newExtension, ALLOWED_EXTENSIONS, true)) {
             $message = 'Nieuwe bestandstype is niet toegestaan.';
         } else {
             $safeNewName = preg_replace('/[^a-zA-Z0-9._-]/', '_', basename($newName));
             $newPath = $mediaDir . '/' . $safeNewName;
 
-            if (is_file($newPath)) {
+            if ($safeNewName === '' || $safeNewName[0] === '.' || substr_count($safeNewName, '.') !== 1 || file_exists($newPath)) {
                 $message = 'Er bestaat al een bestand met deze naam.';
             } else {
-                rename($oldPath, $newPath);
-
+                if (!rename($oldPath, $newPath)) {
+                    $message = 'Hernoemen mislukt.';
+                } else {
                 if (isset($settings[$oldName])) {
                     $settings[$safeNewName] = $settings[$oldName];
                     unset($settings[$oldName]);
@@ -295,6 +305,7 @@ if (
                 }
 
                 $message = 'Bestand hernoemd.';
+                }
             }
         }
     }
@@ -307,13 +318,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_file'])) {
     $fileToDelete = basename((string)$_POST['delete_file']);
     $path = $mediaDir . '/' . $fileToDelete;
 
-    if (is_file($path)) {
-        unlink($path);
-
+    if (is_file($path) && !is_link($path)) {
+        if (!unlink($path)) {
+            $message = 'Verwijderen mislukt.';
+        } else {
         unset($settings[$fileToDelete]);
         saveSettings($settingsFile, $settings);
 
         $message = 'Bestand verwijderd.';
+        }
     }
 }
 
@@ -325,7 +338,7 @@ $files = [];
 foreach (scandir($mediaDir) as $file) {
     $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 
-    if (in_array($extension, ALLOWED_EXTENSIONS, true)) {
+    if (is_file($mediaDir . '/' . $file) && !is_link($mediaDir . '/' . $file) && in_array($extension, ALLOWED_EXTENSIONS, true)) {
         $files[] = $file;
     }
 }
@@ -358,7 +371,10 @@ sort($files);
             </a>
             <nav class="top-links" aria-label="Beheeracties">
                 <a class="button" href="<?php echo htmlspecialchars(app_url($currentScreen)); ?>" target="_blank" rel="noopener noreferrer">Open huidig scherm ↗</a>
-                <a class="button secondary" href="<?php echo htmlspecialchars(app_url('admin/logout.php')); ?>">Uitloggen</a>
+                <form method="POST" action="<?php echo htmlspecialchars(app_url('admin/logout.php'), ENT_QUOTES); ?>">
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(signage_csrf_token(), ENT_QUOTES); ?>">
+                    <button class="button secondary" type="submit">Uitloggen</button>
+                </form>
             </nav>
         </div>
         <div class="intro">
@@ -564,7 +580,7 @@ sort($files);
 const timeoutSeconds = <?php echo SESSION_TIMEOUT; ?>;
 
 setTimeout(function () {
-    window.location.href = "<?php echo htmlspecialchars(app_url('admin/logout.php?timeout=1')); ?>";
+    window.location.href = "<?php echo htmlspecialchars(app_url('admin/')); ?>";
 }, timeoutSeconds * 1000);
 </script>
 

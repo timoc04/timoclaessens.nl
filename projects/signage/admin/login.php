@@ -9,19 +9,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     signage_verify_csrf();
     $username = trim((string)($_POST['username'] ?? ''));
     $password = (string)($_POST['password'] ?? '');
-    $authenticatedUser = signage_login_allowed() ? signage_authenticate($username, $password) : null;
+    try {
+        $allowed = signage_login_allowed() && signage_rate_limit(false);
+        $authenticatedUser = $allowed ? signage_authenticate($username, $password) : null;
+        if ($allowed && $authenticatedUser === null) signage_rate_limit(true);
+    } catch (RuntimeException $exception) {
+        http_response_code(503);
+        exit('Inloggen tijdelijk niet beschikbaar. Probeer later opnieuw.');
+    }
 
     if ($authenticatedUser !== null) {
         session_regenerate_id(true);
         unset($_SESSION['login_failures'], $_SESSION['login_window_start'], $_SESSION['login_locked_until']);
         $_SESSION['logged_in'] = true;
         $_SESSION['username'] = $authenticatedUser;
+        $_SESSION['account_fingerprint'] = hash('sha256', SIGNAGE_USERS[$authenticatedUser]);
+        $_SESSION['last_activity'] = time();
         header('Location: ' . app_url('admin/'));
         exit;
     }
 
     if (signage_login_allowed()) signage_login_failed();
-    $error = signage_login_allowed() ? 'Onjuiste gebruikersnaam of wachtwoord.' : 'Te veel pogingen. Probeer het over 15 minuten opnieuw.';
+    $error = (signage_login_allowed() && signage_rate_limit(false))
+        ? 'Onjuiste gebruikersnaam of wachtwoord.'
+        : 'Te veel pogingen. Probeer het over 15 minuten opnieuw.';
 }
 ?>
 
@@ -47,6 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p class="eyebrow">Signage / Administration</p>
             <h1 id="login-title">Welkom <em>terug.</em></h1>
             <p>Log in om schermen, media en weergavetijden te beheren.</p>
+            <?php if (isset($_GET['timeout']) && $_GET['timeout'] === '1'): ?>
+                <div class="error" role="status">Je sessie is verlopen. Log opnieuw in.</div>
+            <?php endif; ?>
             <?php if ($error): ?>
                 <div class="error" role="alert"><?php echo htmlspecialchars($error); ?></div>
             <?php endif; ?>
