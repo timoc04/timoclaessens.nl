@@ -47,12 +47,15 @@ function signage_login_failed(): void
     $_SESSION['login_failures'] = (int)($_SESSION['login_failures'] ?? 0) + 1;
     if ($_SESSION['login_failures'] >= 5) $_SESSION['login_locked_until'] = $now + 900;
 }
-function signage_password_matches(string $password): bool
+/**
+ * Validate one of the named accounts in the private config.php.
+ * SIGNAGE_USERS = ['username' => 'password_hash', ...].
+ */
+function signage_authenticate(string $username, string $password): ?string
 {
-    if (defined('ADMIN_PASSWORD_HASH') && ADMIN_PASSWORD_HASH !== '') {
-        return password_verify($password, ADMIN_PASSWORD_HASH);
-    }
-    // Backwards-compatible migration: remove ADMIN_PASSWORD after configuring a hash.
-    return defined('ADMIN_PASSWORD') && is_string(ADMIN_PASSWORD) &&
-        ADMIN_PASSWORD !== '' && hash_equals(ADMIN_PASSWORD, $password);
+    if (!defined('SIGNAGE_USERS') || !is_array(SIGNAGE_USERS)) return null;
+    if ($username === '' || strlen($username) > 100) return null;
+    $hash = SIGNAGE_USERS[$username] ?? null;
+    if (!is_string($hash) || $hash === '' || !password_verify($password, $hash)) return null;
+    return $username;
 }
