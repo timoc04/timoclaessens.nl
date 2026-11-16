@@ -23,7 +23,12 @@ $mediaUrl = app_url('screens/' . $screen . '/media');
 $files = [];
 
 if (is_dir($mediaDir)) {
-    $settings = signage_load_settings($settingsFile);
+    try {
+        $settings = signage_load_settings($settingsFile);
+    } catch (RuntimeException $exception) {
+        error_log('Signage player settings error: ' . $exception->getMessage());
+        $settings = [];
+    }
 
     foreach (scandir($mediaDir) ?: [] as $file) {
         $path = $mediaDir . '/' . $file;
