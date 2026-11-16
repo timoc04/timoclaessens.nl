@@ -1,19 +1,24 @@
 <?php
-session_start();
 require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../includes/security.php';
+signage_start_session();
 
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $password = $_POST['password'] ?? '';
+    signage_verify_csrf();
+    $password = (string)($_POST['password'] ?? '');
 
-    if ($password === ADMIN_PASSWORD) {
+    if (signage_login_allowed() && signage_password_matches($password)) {
+        session_regenerate_id(true);
+        unset($_SESSION['login_failures'], $_SESSION['login_window_start'], $_SESSION['login_locked_until']);
         $_SESSION['logged_in'] = true;
         header('Location: ' . app_url('admin/'));
         exit;
     }
 
-    $error = 'Onjuist wachtwoord.';
+    if (signage_login_allowed()) signage_login_failed();
+    $error = signage_login_allowed() ? 'Onjuist wachtwoord.' : 'Te veel pogingen. Probeer het over 15 minuten opnieuw.';
 }
 ?>
 
@@ -43,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="error" role="alert"><?php echo htmlspecialchars($error); ?></div>
             <?php endif; ?>
             <form method="POST">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(signage_csrf_token(), ENT_QUOTES); ?>">
                 <label for="password">Wachtwoord</label>
                 <input id="password" type="password" name="password" autocomplete="current-password" placeholder="Voer je wachtwoord in" required>
                 <button type="submit">Inloggen</button>
