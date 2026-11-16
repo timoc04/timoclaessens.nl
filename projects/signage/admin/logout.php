@@ -3,71 +3,55 @@ require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../includes/security.php';
 signage_start_session();
 
+// Preserve the timeout reason only for the confirmation message.
+$timedOut = isset($_GET['timeout']) && $_GET['timeout'] === '1';
+
+// Clear all authentication/session data and expire the session cookie.
+$_SESSION = [];
+if (ini_get('session.use_cookies')) {
+    $cookie = session_get_cookie_params();
+    setcookie(session_name(), '', [
+        'expires' => time() - 42000,
+        'path' => $cookie['path'],
+        'domain' => $cookie['domain'],
+        'secure' => $cookie['secure'],
+        'httponly' => $cookie['httponly'],
+        'samesite' => $cookie['samesite'] ?? 'Lax',
+    ]);
+}
 session_destroy();
 ?>
-
 <!DOCTYPE html>
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>Uitgelogd</title>
-
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #111827;
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logout-card {
-            background: #1f2937;
-            padding: 40px;
-            border-radius: 18px;
-            text-align: center;
-            box-shadow: 0 12px 32px rgba(0,0,0,0.3);
-        }
-
-        h1 {
-            margin-top: 0;
-            margin-bottom: 14px;
-        }
-
-        p {
-            color: #d1d5db;
-            margin-bottom: 24px;
-        }
-
-        a {
-            display: inline-block;
-            background: #2563eb;
-            color: white;
-            text-decoration: none;
-            padding: 12px 18px;
-            border-radius: 10px;
-        }
-
-        a:hover {
-            background: #1d4ed8;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?php echo $timedOut ? 'Sessie verlopen' : 'Uitgelogd'; ?> | Signage beheer</title>
+    <link rel="icon" type="image/svg+xml" href="https://timoclaessens.nl/assets/icons/favicon.svg?v=f4139c4">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://timoclaessens.nl/assets/icons/apple-touch-icon.png?v=ed1fe7e">
+    <link rel="manifest" href="/admin/admin.webmanifest">
+    <link rel="stylesheet" href="admin.css?v=33ea597">
 </head>
-
 <body>
-
-<div class="logout-card">
-    <h1>Uitgelogd</h1>
-
-    <p>Je bent succesvol uitgelogd uit het signage beheerpaneel.</p>
-
-    <a href="<?php echo htmlspecialchars(app_url('admin/login.php')); ?>">
-        Opnieuw inloggen
-    </a>
-</div>
-
+<main class="login-layout">
+    <div class="login-shell">
+        <a class="brand login-brand" href="https://timoclaessens.nl/" aria-label="Timo Claessens homepage">
+            <img class="monogram" src="https://timoclaessens.nl/assets/icons/favicon.svg?v=f4139c4" alt="tc. logo" width="38" height="38">
+            <span>Timo Claessens <span aria-hidden="true">/</span> Signage</span>
+        </a>
+        <section class="login-card" aria-labelledby="logout-title">
+            <p class="eyebrow">Signage / Administration</p>
+            <?php if ($timedOut): ?>
+                <h1 id="logout-title">Sessie <em>verlopen.</em></h1>
+                <p>Je bent automatisch uitgelogd vanwege inactiviteit. Log opnieuw in om verder te gaan.</p>
+            <?php else: ?>
+                <h1 id="logout-title">Tot <em>ziens.</em></h1>
+                <p>Je bent succesvol uitgelogd uit het signage beheerpaneel.</p>
+            <?php endif; ?>
+            <a class="button" href="<?php echo htmlspecialchars(app_url('admin/login.php'), ENT_QUOTES, 'UTF-8'); ?>">Opnieuw inloggen</a>
+        </section>
+        <p class="login-footer">TimoClaessens.nl Signage</p>
+    </div>
+</main>
 </body>
 </html>
