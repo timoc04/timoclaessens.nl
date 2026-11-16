@@ -26,3 +26,6 @@ jobs:
           find projects/signage -type f -name '*.php' ! -name 'config.php' -print0 | xargs -0 -n1 php -l
       - name: Run security regression tests
         run: php projects/signage/tests/security_test.php
+
+      - name: Run settings storage tests
+        run: php projects/signage/tests/settings_test.php

@@ -3,23 +3,14 @@
 header('Cache-Control: public, max-age=86400');
 
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/includes/settings.php';
 
 function sanitizeScreenName(string $screen): string
 {
     return preg_replace('/[^a-zA-Z0-9_-]/', '', $screen);
 }
 
-function loadSettings(string $settingsFile): array
-{
-    if (!file_exists($settingsFile)) {
-        return [];
-    }
 
-    $json = file_get_contents($settingsFile);
-    $settings = json_decode($json, true);
-
-    return is_array($settings) ? $settings : [];
-}
 
 $requestedScreen = $_GET['screen'] ?? 'main';
 $screen = sanitizeScreenName(is_string($requestedScreen) ? $requestedScreen : 'main');
@@ -32,7 +23,12 @@ $mediaUrl = app_url('screens/' . $screen . '/media');
 $files = [];
 
 if (is_dir($mediaDir)) {
-    $settings = loadSettings($settingsFile);
+    try {
+        $settings = signage_load_settings($settingsFile);
+    } catch (RuntimeException $exception) {
+        error_log('Signage player settings error: ' . $exception->getMessage());
+        $settings = [];
+    }
 
     foreach (scandir($mediaDir) ?: [] as $file) {
         $path = $mediaDir . '/' . $file;

@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../includes/settings.php';
 require_once __DIR__ . '/../includes/security.php';
 signage_start_session();
 
@@ -77,25 +78,9 @@ function deleteDirectory(string $dir): void
     if (!rmdir($dir)) throw new RuntimeException('Map verwijderen mislukt.');
 }
 
-function loadSettings(string $settingsFile): array
-{
-    if (!file_exists($settingsFile)) {
-        return [];
-    }
 
-    $json = file_get_contents($settingsFile);
-    $settings = json_decode($json, true);
 
-    return is_array($settings) ? $settings : [];
-}
 
-function saveSettings(string $settingsFile, array $settings): void
-{
-    $json = json_encode($settings, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
-    if (file_put_contents($settingsFile, $json, LOCK_EX) === false) {
-        throw new RuntimeException('Instellingen opslaan mislukt.');
-    }
-}
 
 function isImageFile(string $file): bool
 {
@@ -192,7 +177,13 @@ if (!file_exists($settingsFile)) {
     file_put_contents($settingsFile, '{}');
 }
 
-$settings = loadSettings($settingsFile);
+try {
+    $settings = signage_load_settings($settingsFile);
+} catch (RuntimeException $exception) {
+    error_log('Signage admin settings error: ' . $exception->getMessage());
+    http_response_code(500);
+    exit('Scherminstellingen kunnen niet worden gelezen. Controleer settings.json op de server.');
+}
 
 /**
  * Upload media file.
@@ -226,7 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['media'])) {
         } else {
         if (isImageFile($safeName)) {
             $settings[$safeName]['duration'] = IMAGE_DEFAULT_DURATION;
-            saveSettings($settingsFile, $settings);
+            signage_save_settings($settingsFile, $settings);
         }
 
         $message = 'Bestand geüpload.';
@@ -253,7 +244,7 @@ if (
         $message = 'Weergavetijd kan alleen bij afbeeldingen worden aangepast.';
     } else {
         $settings[$fileName]['duration'] = $duration;
-        saveSettings($settingsFile, $settings);
+        signage_save_settings($settingsFile, $settings);
 
         $message = 'Weergavetijd opgeslagen.';
     }
@@ -301,7 +292,7 @@ if (
                 if (isset($settings[$oldName])) {
                     $settings[$safeNewName] = $settings[$oldName];
                     unset($settings[$oldName]);
-                    saveSettings($settingsFile, $settings);
+                    signage_save_settings($settingsFile, $settings);
                 }
 
                 $message = 'Bestand hernoemd.';
@@ -323,7 +314,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_file'])) {
             $message = 'Verwijderen mislukt.';
         } else {
         unset($settings[$fileToDelete]);
-        saveSettings($settingsFile, $settings);
+        signage_save_settings($settingsFile, $settings);
 
         $message = 'Bestand verwijderd.';
         }
