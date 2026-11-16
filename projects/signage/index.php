@@ -175,6 +175,7 @@ function showNext() {
         video.onerror = finish;
         video.onplaying = () => {
             clearTimeout(startTimer);
+            clearPlaybackTimer();
             const seconds = Number.isFinite(video.duration) && video.duration > 0
                 ? video.duration + 5 : VIDEO_MAX_RUNTIME_MS / 1000;
             playbackTimer = setTimeout(finish, Math.min(seconds * 1000, VIDEO_MAX_RUNTIME_MS));
@@ -186,7 +187,13 @@ function showNext() {
     } else {
         const img = new Image();
         let finished = false;
+        const loadTimer = setTimeout(() => {
+            if (finished) return;
+            finished = true;
+            advance();
+        }, VIDEO_START_TIMEOUT_MS);
         img.onload = () => {
+            clearTimeout(loadTimer);
             if (finished) return;
             player.replaceChildren(img);
             playbackTimer = setTimeout(() => {
@@ -195,6 +202,7 @@ function showNext() {
             }, item.duration * 1000);
         };
         img.onerror = () => {
+            clearTimeout(loadTimer);
             if (finished) return;
             finished = true;
             advance();
