@@ -35,8 +35,9 @@ const IMAGE_DEFAULT_DURATION = 10;
 
 const SESSION_TIMEOUT = 1800;
 
-// Recommended: a writable directory OUTSIDE public_html for shared login throttling.
-// const SIGNAGE_SECURITY_DIR = '/home/YOUR_CPANEL_USER/signage-private-security';
+// Writable directory OUTSIDE public_html for login rate limiting.
+// Replace JOUW_CPANEL_GEBRUIKERSNAAM with your actual cPanel username.
+const SIGNAGE_SECURITY_DIR = '/home/JOUW_CPANEL_GEBRUIKERSNAAM/signage-private-security';
 
 function app_url(string $path = ''): string
 {
