@@ -1,8 +1,12 @@
 <?php
 
-// Generate with: php -r "echo password_hash('YOUR-STRONG-PASSWORD', PASSWORD_DEFAULT), PHP_EOL;"
-const ADMIN_PASSWORD_HASH = 'REPLACE_WITH_PASSWORD_HASH';
-// Legacy ADMIN_PASSWORD is temporarily supported for migration, but should be removed.
+// Generate a hash for EACH user locally with:
+// php -r '$password = readline("Password: "); echo password_hash($password, PASSWORD_DEFAULT), PHP_EOL;'
+// Copy the hashes below into your private server-side config.php; never commit real credentials.
+const SIGNAGE_USERS = [
+    'admin' => 'REPLACE_WITH_HASH_FOR_ADMIN',
+    // 'colleague' => 'REPLACE_WITH_HASH_FOR_COLLEAGUE',
+];
 
 /*
 |--------------------------------------------------------------------------
