@@ -10,7 +10,7 @@ The portfolio is a lightweight HTML/CSS/JavaScript site. Signage is a PHP applic
 .
 ├── .github/workflows/
 │   ├── cache-busting.yml       # Refresh versioned asset references and icons
-│   └── signage-security.yml    # PHP lint and authentication smoke checks
+│   └── signage-security.yml    # PHP lint, authentication and settings tests
 ├── assets/
 │   ├── css/style.css           # Portfolio styles
 │   ├── icons/                  # Shared logo, favicon and generated PNG icons
@@ -23,9 +23,10 @@ The portfolio is a lightweight HTML/CSS/JavaScript site. Signage is a PHP applic
 │   ├── .htaccess               # Redirect and routing rules
 │   ├── index.php               # Public fullscreen player
 │   ├── admin/                  # Login, logout, admin UI and styles
-│   ├── includes/security.php   # Shared security helpers
+│   ├── includes/              # Security and atomic settings storage
 │   ├── screens/                # Screen data and public media (see note below)
 │   ├── config.example.php      # Template only; no credentials
+│   ├── tests/                  # PHP regression tests
 │   ├── README.md               # Signage setup and operation
 │   └── SECURITY.md             # Security rollout and verification notes
 ├── scripts/version_assets.py   # Content-based asset URL versioning
@@ -85,7 +86,7 @@ After merging, delete obsolete feature branches if they are no longer needed.
 ### Automated checks
 
 - `.github/workflows/cache-busting.yml` runs on relevant pushes to `main` (or manually), renders home-screen icons and runs `scripts/version_assets.py`. The script adds content hashes such as `?v=77e1e34` to configured asset URLs.
-- `.github/workflows/signage-security.yml` runs on signage-related pull requests and pushes to `main`. It checks PHP syntax and a few authentication behaviours. It is **not** a full integration or penetration test.
+- `.github/workflows/signage-security.yml` runs on signage-related pull requests and pushes to `main`. It checks PHP syntax, authentication and rate limiting, plus JSON settings storage and malformed-file handling. It is **not** a full integration or penetration test.
 
 If you add a new asset reference or PHP page, update `scripts/version_assets.py` and the relevant workflow path filters as needed.
 
@@ -96,7 +97,8 @@ If you add a new asset reference or PHP page, update `scripts/version_assets.py`
 - [ ] Icons, manifests and updated CSS/JS URLs load.
 - [ ] GitHub checks pass and cPanel has pulled the latest `main`.
 - [ ] Signage admin login, logout, upload, rename and deletion work.
-- [ ] Fullscreen signage player still displays media.
+- [ ] Fullscreen signage player still displays media, including recovery from missing or broken files.
+- [ ] Image durations save correctly and existing screen settings are preserved.
 - [ ] Live `config.php`, screen settings and uploaded media are preserved.
 
 ## Contact
