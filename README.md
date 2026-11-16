@@ -16,6 +16,8 @@ The portfolio is a lightweight HTML/CSS/JavaScript site. Signage is a PHP applic
 │   ├── icons/                  # Shared logo, favicon and generated PNG icons
 │   └── js/main.js              # Portfolio interactions
 ├── index.html                  # Portfolio homepage
+├── 404.html / 404.css          # Branded missing-page response
+├── .htaccess                   # Apache 404 error document
 ├── privacy/
 │   ├── index.html
 │   └── privacy.css
@@ -49,6 +51,10 @@ Then visit `http://localhost:8000`. This previews **only the static portfolio**;
 ### Icons
 
 `assets/icons/favicon.svg` is the shared logo. The cache-busting workflow generates `apple-touch-icon.png`, `icon-192.png` and `icon-512.png` from it. Edit the SVG, not the generated PNGs. The portfolio and signage each have web manifests.
+
+## Custom 404 page
+
+The root `.htaccess` sets `ErrorDocument 404 /404.html`, serving a branded page with the normal HTTP 404 status on the portfolio hostname. The page uses the shared portfolio stylesheet plus `404.css`. **Before deployment, check whether cPanel already has an untracked `public_html/.htaccess`**: merge the `ErrorDocument` directive into existing rules rather than replacing them. Ensure `404.html` and `404.css` are deployed in the portfolio document root. Test a non-existent URL and verify its HTTP status is 404, not 200. The signage subdomain has separate Apache routing and is not automatically covered by the portfolio's root error page.
 
 ## Signage
 

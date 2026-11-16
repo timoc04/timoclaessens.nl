@@ -1,0 +1,4 @@
+# Serve the branded error page with a real HTTP 404 status.
+# If cPanel already has a root .htaccess, merge this directive into it
+# instead of overwriting existing hosting or redirect rules.
+ErrorDocument 404 /404.html
