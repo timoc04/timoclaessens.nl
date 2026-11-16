@@ -177,7 +177,13 @@ if (!file_exists($settingsFile)) {
     file_put_contents($settingsFile, '{}');
 }
 
-$settings = signage_load_settings($settingsFile);
+try {
+    $settings = signage_load_settings($settingsFile);
+} catch (RuntimeException $exception) {
+    error_log('Signage admin settings error: ' . $exception->getMessage());
+    http_response_code(500);
+    exit('Scherminstellingen kunnen niet worden gelezen. Controleer settings.json op de server.');
+}
 
 /**
  * Upload media file.
