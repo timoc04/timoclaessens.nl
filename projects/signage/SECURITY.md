@@ -1,6 +1,6 @@
-# Signage security rollout (Phase 1)
+# Signage security and reliability notes
 
-This change affects the signage admin only; the public fullscreen player remains unchanged.
+This document records the Phase 1 admin security rollout and subsequent Phase 2 reliability improvements. The public player has also been updated for recovery from media failures.
 
 ## Before deployment
 1. Back up the live `config.php`, all `screens/` folders and media.
@@ -20,10 +20,10 @@ This change affects the signage admin only; the public fullscreen player remains
 ## What changes
 - A CSRF token is required on all admin POST forms, including login; deleting media now uses POST instead of GET.
 - Sessions use HttpOnly, SameSite=Lax cookies, strict mode and a regenerated session ID on login.
-- Failed login attempts are throttled **per session** (5 failures -> 15-minute lock). This is not IP-level or distributed rate limiting; configure hosting/WAF throttling as an additional protection.
+- Failed login attempts are throttled per session and per remote IP (5 failures, then a 15-minute lock). The IP limiter requires a writable private directory outside the public web root.
 - Uploads are checked against file extensions and actual MIME types, limited to 100 MB, and will not overwrite existing files.
 - Requests for JSON settings and executable files under `screens/` are denied by Apache; directory listing is disabled.
-- Login requires a configured username and matching password hash in `SIGNAGE_USERS`. Multiple named accounts are supported. Existing sessions are not individually revoked when an account is removed; session invalidation and audit logging are future improvements.
+- Login requires a configured username and matching password hash in `SIGNAGE_USERS`. Multiple named accounts are supported. Sessions are invalidated on the next authenticated request when an account is removed or its password hash changes. Audit logging remains a future improvement.
 
 ## Manual verification after deployment
 - Log in with each configured username and its original password (not the hash), log out, and confirm admin redirects work. Verify incorrect usernames/passwords are rejected.
@@ -34,7 +34,7 @@ This change affects the signage admin only; the public fullscreen player remains
 - Confirm that server configuration and uploaded media are not tracked in Git.
 
 ## Remaining security work
-For stronger public-facing protection add server-side IP-based login throttling/WAF rules, centralised logging, automated tests, safer file operations and ideally non-public persistent storage for screen settings. No live penetration test has been performed as part of this PR.
+Further improvements include centralised audit logging, broader browser/integration tests, stronger CSP, and non-public persistent storage for screen settings. No live penetration test has been performed.
 
 ## Phase 1 completion: additional hardening
 - Logout now requires an authenticated POST with CSRF token. Opening `admin/logout.php` directly with GET returns HTTP 405; use the **Uitloggen** button in the admin.
@@ -57,3 +57,19 @@ For stronger public-facing protection add server-side IP-based login throttling/
 - No formal penetration test, continuous audit logging or automated integration test suite is included.
 - Rate limiting uses the web server's `REMOTE_ADDR`; validate reverse-proxy setup if a proxy is later introduced.
 - The PHP session is not tied to browser fingerprint or device; password change/account removal invalidates sessions on their next admin request.
+
+## Phase 2 reliability improvements
+
+- The fullscreen player retries an empty playlist after 30 seconds, skips missing or unreadable media and uses startup timeouts to recover from stalled playback. It retains fullscreen display and reloads after a playlist cycle.
+- The player validates image durations and safely encodes media filenames and JSON output.
+- The player and admin use shared settings functions in `includes/settings.php`. Settings are written via a temporary file followed by rename, so readers do not encounter partially written JSON. Invalid JSON is rejected rather than silently overwritten; the player uses default durations if settings cannot be read, while the admin stops with an explicit error.
+- GitHub Actions runs PHP lint, `tests/security_test.php` and `tests/settings_test.php`. These are regression checks, not browser-based end-to-end tests or a security audit.
+- Settings updates are not transactionally coordinated with media rename/delete, and simultaneous writers can still overwrite each other's changes. Preserve backups of `config.php` and all `screens/` data.
+
+### Phase 2 manual checks
+
+1. Verify a normal image/video playlist, an empty screen and recovery from missing or corrupt media.
+2. Change image durations and check that the player reflects the changes after its next refresh.
+3. Verify media upload, rename and deletion, and screen creation/deletion, with backups available.
+4. Test damaged JSON only on a disposable test screen; the admin should report a read error without overwriting the file.
+5. Confirm the PHP tests pass in GitHub Actions and the Junda/cPanel deployment has the latest code.
