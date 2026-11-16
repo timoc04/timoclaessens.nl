@@ -11,6 +11,8 @@ PHP digital signage application hosted at [signage.timoclaessens.nl](https://sig
 | `admin/login.php` / `logout.php` | Sign-in and CSRF-protected sign-out |
 | `admin/admin.css` | Shared admin/login/logout styling |
 | `includes/security.php` | Sessions, CSRF, account validation and login throttling |
+| `includes/settings.php` | Shared JSON settings reader and atomic writer |
+| `tests/` | Security and settings regression tests |
 | `config.example.php` | Template for the **private** `config.php` |
 | `screens/<screen>/media/` | Publicly served images and MP4 videos |
 | `screens/<screen>/settings.json` | Display duration settings; blocked from public HTTP access |
@@ -54,14 +56,19 @@ Run the security regression suite locally with PHP 8+:
 
 ```bash
 php projects/signage/tests/security_test.php
+php projects/signage/tests/settings_test.php
 ```
 
-Run it from the repository root. The suite tests password verification, invalidated sessions and the shared IP login limiter. It creates a temporary, isolated rate-limit directory and removes it afterwards; it does not read production `config.php`, contact Junda or modify live media.
+Run it from the repository root. The security suite tests password verification, invalidated sessions and the shared IP login limiter. The settings suite checks saving/loading JSON, temporary-file cleanup and rejection of malformed JSON. It creates a temporary, isolated rate-limit directory and removes it afterwards; it does not read production `config.php`, contact Junda or modify live media.
 
-GitHub Actions runs the same tests and PHP syntax checks for signage pull requests. These are unit-level checks; browser-based admin workflows and public playback still need manual verification before deployment.
+GitHub Actions runs both suites and PHP syntax checks for signage pull requests. These are unit-level checks; browser-based admin workflows and public playback still need manual verification before deployment.
 
 ## Player reliability
 
 The player skips missing or unreadable media, limits image/video startup waits to 15 seconds, and reloads the playlist after a full cycle. An empty playlist displays a message and retries after 30 seconds, so a screen can recover when media is added later. Image durations are validated and constrained server-side. Playback stays fullscreen.
 
 After deploying player changes, manually test: an empty screen, a missing image, an invalid video, an image with an invalid duration, and a normal image/video playlist. These browser scenarios are not covered by the PHP security tests.
+
+## Screen settings reliability
+
+The player and admin share `includes/settings.php`. Settings updates are written to a temporary file in the same directory and renamed into place, reducing the risk of partially written JSON. Invalid JSON is not silently overwritten: the admin stops with an error and the player falls back to default durations, logging the read error server-side. Back up and repair damaged `settings.json` files rather than deleting them blindly. Atomic replacement does not prevent lost updates from simultaneous admin requests; concurrent editing and friendlier save-error messages remain future improvements.
