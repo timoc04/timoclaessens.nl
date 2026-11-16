@@ -72,3 +72,7 @@ After deploying player changes, manually test: an empty screen, a missing image,
 ## Screen settings reliability
 
 The player and admin share `includes/settings.php`. Settings updates are written to a temporary file in the same directory and renamed into place, reducing the risk of partially written JSON. Invalid JSON is not silently overwritten: the admin stops with an error and the player falls back to default durations, logging the read error server-side. Back up and repair damaged `settings.json` files rather than deleting them blindly. Atomic replacement does not prevent lost updates from simultaneous admin requests; concurrent editing and friendlier save-error messages remain future improvements.
+
+## Admin media operation errors
+
+Media uploads, duration updates, renames and deletions now catch unexpected filesystem/settings exceptions and display a generic error in the admin while logging details server-side. Duration input must be a valid integer from 1 to 86400 seconds. A failed settings write may occur after a file operation, so inspect the screen directory before retrying; full transactional rollback is not yet implemented. Test these operations after deployment.
