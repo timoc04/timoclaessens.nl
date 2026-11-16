@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         cms_save_content($content);
         $notice = 'Changes saved successfully. Refresh the website to see them.';
     } catch (InvalidArgumentException $exception) {
-        $error = 'Please fill in every field and respect the character limits.';
+        $error = 'Please check the required fields, URLs (HTTP/HTTPS only) and tags (1–6, comma-separated).';
     } catch (Throwable $exception) {
         error_log('Portfolio CMS save error: ' . $exception->getMessage());
         http_response_code(500);
@@ -74,12 +74,13 @@ foreach (cms_fields() as $key => $field) {
 <div class="field-grid">
 <?php foreach ($fields as $key => $field):
     $value = $content[$key] ?? $field['default'];
-    $isShort = str_ends_with($key, '_title');
+    $isShort = str_ends_with($key, '_title') || in_array(($field['type'] ?? ''), ['url', 'tags'], true);
+    $inputType = ($field['type'] ?? '') === 'url' ? 'url' : 'text';
 ?>
 <div class="field">
 <label for="<?= cms_escape($key) ?>"><?= cms_escape($field['label']) ?></label>
 <?php if ($isShort): ?>
-<input type="text" id="<?= cms_escape($key) ?>" name="content[<?= cms_escape($key) ?>]" value="<?= cms_escape($value) ?>" maxlength="<?= (int)$field['limit'] ?>" required>
+<input type="<?= cms_escape($inputType) ?>" id="<?= cms_escape($key) ?>" name="content[<?= cms_escape($key) ?>]" value="<?= cms_escape($value) ?>" maxlength="<?= (int)$field['limit'] ?>" required>
 <?php else: ?>
 <textarea id="<?= cms_escape($key) ?>" name="content[<?= cms_escape($key) ?>]" rows="3" maxlength="<?= (int)$field['limit'] ?>" required><?= cms_escape($value) ?></textarea>
 <?php endif; ?>
