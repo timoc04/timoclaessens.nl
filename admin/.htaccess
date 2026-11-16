@@ -1,0 +1,6 @@
+Options -Indexes
+DirectoryIndex index.php
+# The configuration is never a public endpoint.
+<FilesMatch "^config(\.example)?\.php$">
+    Require all denied
+</FilesMatch>
