@@ -2,7 +2,7 @@
 
 Source code for [timoclaessens.nl](https://timoclaessens.nl) and its separate digital signage application at [signage.timoclaessens.nl](https://signage.timoclaessens.nl).
 
-The portfolio is a lightweight HTML/CSS/JavaScript site. Signage is a PHP application with a fullscreen player, an authenticated admin interface and file-based screen settings. Both live sites are hosted through Junda/cPanel.
+The portfolio is a lightweight HTML/CSS/JavaScript site with an optional PHP content manager. Signage is a PHP application with a fullscreen player, an authenticated admin interface and file-based screen settings. Both live sites are hosted through Junda/cPanel.
 
 ## Repository layout
 
@@ -15,6 +15,13 @@ The portfolio is a lightweight HTML/CSS/JavaScript site. Signage is a PHP applic
 │   ├── css/style.css           # Portfolio styles
 │   ├── icons/                  # Shared logo, favicon and generated PNG icons
 │   └── js/main.js              # Portfolio interactions
+├── admin/                      # Portfolio CMS (separate from signage)
+│   ├── index.php               # Authenticated text editor
+│   ├── login.php / logout.php  # CMS authentication
+│   ├── api/content.php         # Public plain-text content endpoint
+│   ├── includes/              # Auth and JSON storage helpers
+│   ├── config.example.php      # Private config template
+│   └── README.md               # CMS setup and backup guidance
 ├── index.html                  # Portfolio homepage
 ├── 404.html / 404.css          # Branded missing-page response
 ├── .htaccess                   # Apache 404 error document
@@ -52,6 +59,12 @@ Then visit `http://localhost:8000`. This previews **only the static portfolio**;
 
 `assets/icons/favicon.svg` is the shared logo. The cache-busting workflow generates `apple-touch-icon.png`, `icon-192.png` and `icon-512.png` from it. Edit the SVG, not the generated PNGs. The portfolio and signage each have web manifests.
 
+## Portfolio CMS (phase 1)
+
+A separate, optional PHP CMS at `/admin/` can edit the homepage introduction, About text, selected project titles/descriptions, expertise introduction and contact introduction. It keeps the existing static HTML as a fallback and loads published plain-text changes from `/admin/api/content.php`. It does **not** share signage accounts or configuration.
+
+**Server-side setup is required before the CMS works:** create an untracked `admin/config.php` from `admin/config.example.php`, set a password-hashed account and a private writable storage directory outside `public_html`. See [CMS installation and safety notes](admin/README.md). Never commit real credentials or delete the private CMS storage during cPanel deployments. The initial phase does not cover images, project links, or server-side SEO rendering.
+
 ## Custom 404 page
 
 The root `.htaccess` sets `ErrorDocument 404 /404.html`, serving a branded page with the normal HTTP 404 status on the portfolio hostname. The page uses the shared portfolio stylesheet plus `404.css`. **Before deployment, check whether cPanel already has an untracked `public_html/.htaccess`**: merge the `ErrorDocument` directive into existing rules rather than replacing them. Ensure `404.html` and `404.css` are deployed in the portfolio document root. Test a non-existent URL and verify its HTTP status is 404, not 200. The signage subdomain has separate Apache routing and is not automatically covered by the portfolio's root error page.
@@ -87,11 +100,12 @@ After merging, delete obsolete feature branches if they are no longer needed.
 3. In **cPanel → Git Version Control**, use **Pull or Update** for the latest `main`. Complete any additional deployment step required by the configured document root.
 4. Verify the portfolio, privacy page, signage player, admin login/logout and media management.
 
-**GitHub Actions does not automatically deploy to Junda.** Do not replace the untracked production `config.php` or live screen data during updates. Back up production files before changing signage.
+**GitHub Actions does not automatically deploy to Junda.** Do not replace the untracked production `config.php` or live screen data during updates. Back up production files before changing signage. Also preserve `admin/config.php` and the CMS storage directory outside `public_html` when deploying the CMS.
 
 ### Automated checks
 
 - `.github/workflows/cache-busting.yml` runs on relevant pushes to `main` (or manually), renders home-screen icons and runs `scripts/version_assets.py`. The script adds content hashes such as `?v=77e1e34` to configured asset URLs.
+- `.github/workflows/portfolio-cms.yml` lints CMS PHP, checks the JavaScript syntax and runs the CMS JSON storage regression test.
 - `.github/workflows/signage-security.yml` runs on signage-related pull requests and pushes to `main`. It checks PHP syntax, authentication and rate limiting, plus JSON settings storage and malformed-file handling. It is **not** a full integration or penetration test.
 
 If you add a new asset reference or PHP page, update `scripts/version_assets.py` and the relevant workflow path filters as needed.
@@ -106,6 +120,8 @@ If you add a new asset reference or PHP page, update `scripts/version_assets.py`
 - [ ] Fullscreen signage player still displays media, including recovery from missing or broken files.
 - [ ] Image durations save correctly and existing screen settings are preserved.
 - [ ] Live `config.php`, screen settings and uploaded media are preserved.
+- [ ] CMS login, save, logout and public text updates work after PHP setup.
+- [ ] Private `admin/config.php` and CMS storage remain outside Git/deployments.
 
 ## Contact
 
