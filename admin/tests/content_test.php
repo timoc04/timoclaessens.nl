@@ -13,7 +13,7 @@ function check(bool $condition, string $message): void
 
 try {
     $defaults = cms_read_content();
-    check(count($defaults) === 14, 'Expected fourteen editable fields.');
+    check(count($defaults) === 22, 'Expected fourteen editable fields.');
     check($defaults['project_1_title'] === 'AWS Infrastructure & Automation', 'Unexpected project default.');
 
     $modified = $defaults;
@@ -32,6 +32,30 @@ try {
         throw new RuntimeException('Oversized value was incorrectly accepted.');
     } catch (InvalidArgumentException $expected) {}
     check(cms_read_content() === $loaded, 'Invalid input overwrote stored data.');
+
+    // Existing phase-1 JSON is migrated in memory with new field defaults.
+    $legacy = $loaded;
+    unset($legacy['project_1_url'], $legacy['project_1_tags']);
+    file_put_contents($directory . '/content.json', json_encode($legacy, JSON_THROW_ON_ERROR));
+    $migrated = cms_read_content();
+    check($migrated['hero_intro'] === 'Hello from the CMS test', 'Legacy copy was lost.');
+    check($migrated['project_1_url'] === $defaults['project_1_url'], 'Missing URL default not restored.');
+
+    foreach (['javascript:alert(1)', 'https://user:pass@example.com/path', 'ftp://example.com'] as $unsafe) {
+        $badUrl = $migrated;
+        $badUrl['project_1_url'] = $unsafe;
+        try {
+            cms_save_content($badUrl);
+            throw new RuntimeException('Unsafe URL was accepted: ' . $unsafe);
+        } catch (InvalidArgumentException $expected) {}
+    }
+    $badTags = $migrated;
+    $badTags['project_1_tags'] = 'one, two, three, four, five, six, seven';
+    try {
+        cms_save_content($badTags);
+        throw new RuntimeException('Too many tags were accepted.');
+    } catch (InvalidArgumentException $expected) {}
+    check(cms_read_content() === $migrated, 'Invalid metadata changed stored content.');
 
     file_put_contents($directory . '/content.json', '{broken');
     try {

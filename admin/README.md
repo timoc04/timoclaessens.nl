@@ -1,12 +1,18 @@
-# Portfolio CMS — phase 1
+# Portfolio CMS — phase 2
 
 A small PHP content editor for the portfolio at `timoclaessens.nl`. This is **not** the signage admin and does not share its users, cookies or passwords.
 
 ## What you can edit
 
-Log in to `https://timoclaessens.nl/admin/` to edit the hero introduction, About text, four project titles/descriptions, expertise introduction and contact introduction. The visual layout remains HTML/CSS. The homepage requests public plain-text content from `/admin/api/content.php` and replaces matching text nodes using `textContent`. If the CMS is unconfigured or unavailable, the static HTML copy remains visible; it is the original fallback, not necessarily your most recent edit.
+Log in to `https://timoclaessens.nl/admin/` to edit the hero introduction, About text, four project titles, descriptions, destination URLs and technology tags, expertise introduction and contact introduction. The visual layout remains HTML/CSS. The homepage requests public plain-text content from `/admin/api/content.php` and replaces matching text nodes using `textContent`. If the CMS is unconfigured or unavailable, the static HTML copy remains visible; it is the original fallback, not necessarily your most recent edit.
 
-This first phase **does not** edit images, navigation, layout, project count/order, project links, tags or the privacy policy. It does not update GitHub files automatically. Since the homepage remains static with JavaScript content substitution, SEO crawlers and visitors with JS disabled may see the fallback copy instead of CMS edits. Server-rendered content can be implemented later.
+This phase **does not** edit images, navigation, layout, project count/order or the privacy policy. It does not update GitHub files automatically. Since the homepage remains static with JavaScript content substitution, SEO crawlers and visitors with JS disabled may see the fallback copy instead of CMS edits. Server-rendered content can be implemented later.
+
+## Project metadata and compatibility
+
+Each existing project card now has an editable destination URL (HTTP or HTTPS only; embedded credentials are rejected) and 1–6 comma-separated technology tags (maximum 40 bytes each). The frontend uses DOM text nodes for tags and validates link protocols before updating href attributes. It does not interpret HTML from the CMS. Project cards, their visual artwork, and their order are still defined in `index.html`.
+
+Existing `content.json` files from phase 1 remain compatible: missing metadata keys receive the defaults on read and are included on the next save. No database migration, new PHP dependencies or change to `admin/config.php` is needed. Back up the JSON file before deployment as usual.
 
 ## Configure on Junda/cPanel (required before login)
 
@@ -38,4 +44,4 @@ php admin/tests/content_test.php
 
 The unit test uses a temporary directory outside the site and cleans up after itself. The `Portfolio CMS checks` GitHub Action runs PHP syntax checks and this test on relevant pull requests. Use a PHP-enabled local web server and a private test config for browser testing, not a static Live Server.
 
-For future expansion: images/media, editable project links/tags, content previews, revision history and proper server-side rendering.
+For future expansion: images/media, adding/removing/reordering projects, content previews, revision history and proper server-side rendering.
