@@ -39,6 +39,8 @@ jobs:
         run: php admin/tests/projects_test.php
       - name: Homepage draft regression checks
         run: php admin/tests/drafts_test.php
+      - name: Project draft regression checks
+        run: php admin/tests/project_drafts_test.php
       - name: Check JavaScript syntax
         run: |
           node --check assets/js/main.js
