@@ -3,3 +3,7 @@
 
 /* Project manager actions and controls */
 .project-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.project-actions form{margin:0}.field select{display:block;width:100%;background:#fcfdfb;border:1px solid #cad7cc;border-radius:9px;padding:13px 14px;color:var(--text);font:inherit}.button.danger{color:#9a322d;border-color:#e7c8c6}.button.danger:hover{background:#fff0ee}
+
+/* Clearly distinguish unavailable draft actions from enabled primary buttons. */
+.button.primary:disabled{background:#d5d9d6;border-color:#d5d9d6;color:#6d7771;cursor:not-allowed;transform:none;opacity:1}
+.button.primary:disabled:hover{background:#d5d9d6;transform:none}
