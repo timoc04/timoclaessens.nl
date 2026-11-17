@@ -158,6 +158,83 @@ class CmsHttpTests(unittest.TestCase):
         preview = json.loads(self.request("/admin/api/preview-projects.php")[2])
         self.assertEqual(preview, public)
 
+    def test_05_project_manager_draft_lifecycle(self):
+        """Add, edit, reorder, delete and publish through the real project editor."""
+        path = "/admin/projects.php"
+
+        def revisions():
+            status, _, html = self.request(path)
+            self.assertEqual(status, 200)
+            hidden = dict(re.findall(
+                r'<input type="hidden" name="([^"]+)" value="([^"]*)"', html
+            ))
+            return {
+                "csrf_token": hidden["csrf_token"],
+                "revision": hidden["revision"],
+                "live_revision": hidden["live_revision"],
+            }
+
+        def submit(action, project_id="", project=None):
+            fields = dict(revisions(), action=action, id=project_id)
+            if project is not None:
+                fields.update({
+                    f"project[{key}]": ", ".join(value) if key == "tags" else value
+                    for key, value in project.items() if key != "id"
+                })
+            status, _, _ = self.request(path, fields)
+            self.assertEqual(status, 200, f"Project action failed: {action}")
+
+        def public():
+            return json.loads(self.request("/admin/api/projects.php")[2])
+
+        def preview():
+            return json.loads(self.request("/admin/api/preview-projects.php")[2])
+
+        initial = public()
+        self.assertEqual(preview(), initial)
+        new = {
+            "title": "Integration test project",
+            "description": "A temporary project used for HTTP tests.",
+            "url": "https://example.org/test",
+            "tags": ["PHP", "Testing"],
+            "category": "TESTING",
+            "art_label": "TEST CARD",
+            "style": "api",
+        }
+        submit("add", project=new)
+        self.assertEqual(public(), initial, "Draft add changed public projects")
+        self.assertEqual(len(preview()), len(initial) + 1)
+        added = preview()[-1]
+        self.assertEqual(added["title"], new["title"])
+
+        updated = dict(added, title="Edited integration project")
+        submit("save", added["id"], updated)
+        self.assertEqual(preview()[-1]["title"], updated["title"])
+        self.assertEqual(public(), initial)
+
+        submit("up", added["id"])
+        self.assertEqual(preview()[-2]["id"], added["id"])
+        submit("down", added["id"])
+        self.assertEqual(preview()[-1]["id"], added["id"])
+
+        submit("publish")
+        self.assertEqual(public(), preview())
+        self.assertEqual(public()[-1]["title"], updated["title"])
+
+        submit("delete", added["id"])
+        self.assertEqual(len(preview()), len(initial))
+        self.assertEqual(len(public()), len(initial) + 1)
+        submit("publish")
+        self.assertEqual(public(), initial)
+        self.assertEqual(preview(), initial)
+
+        # A discarded draft must not change the published project list.
+        submit("add", project=new)
+        self.assertEqual(len(preview()), len(initial) + 1)
+        submit("discard")
+        self.assertEqual(public(), initial)
+        self.assertEqual(preview(), initial)
+
 
 if __name__ == "__main__":
     unittest.main()
