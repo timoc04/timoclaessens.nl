@@ -53,6 +53,11 @@
       grid.replaceChildren(...cards);
     })
     .catch(() => {
+      if (document.documentElement.dataset.cmsPreview === 'true') {
+        document.body.dataset.previewError = 'true';
+        const banner = document.querySelector('.cms-preview-banner');
+        if (banner) banner.querySelector('strong').textContent = 'Preview could not load — sign in again or reload';
+      }
       // Keep static cards when the CMS endpoint cannot be reached.
     });
 })();
