@@ -7,12 +7,14 @@ on:
       - 'admin/**'
       - 'index.html'
       - 'assets/js/main.js'
+      - 'assets/js/projects.js'
       - '.github/workflows/portfolio-cms.yml'
   pull_request:
     paths:
       - 'admin/**'
       - 'index.html'
       - 'assets/js/main.js'
+      - 'assets/js/projects.js'
       - '.github/workflows/portfolio-cms.yml'
 
 permissions:
@@ -33,5 +35,9 @@ jobs:
           find admin -type f -name '*.php' -print0 | xargs -0 -n1 php -l
       - name: CMS content regression checks
         run: php admin/tests/content_test.php
+      - name: Project storage regression checks
+        run: php admin/tests/projects_test.php
       - name: Check JavaScript syntax
-        run: node --check assets/js/main.js
+        run: |
+          node --check assets/js/main.js
+          node --check assets/js/projects.js

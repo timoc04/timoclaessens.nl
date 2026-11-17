@@ -1,4 +1,4 @@
-# Portfolio CMS — phase 2
+# Portfolio CMS — project management
 
 A small PHP content editor for the portfolio at `timoclaessens.nl`. This is **not** the signage admin and does not share its users, cookies or passwords.
 
@@ -6,13 +6,19 @@ A small PHP content editor for the portfolio at `timoclaessens.nl`. This is **no
 
 Log in to `https://timoclaessens.nl/admin/` to edit the hero introduction, About text, four project titles, descriptions, destination URLs and technology tags, expertise introduction and contact introduction. The visual layout remains HTML/CSS. The homepage requests public plain-text content from `/admin/api/content.php` and replaces matching text nodes using `textContent`. If the CMS is unconfigured or unavailable, the static HTML copy remains visible; it is the original fallback, not necessarily your most recent edit.
 
-This phase **does not** edit images, navigation, layout, project count/order or the privacy policy. It does not update GitHub files automatically. Since the homepage remains static with JavaScript content substitution, SEO crawlers and visitors with JS disabled may see the fallback copy instead of CMS edits. Server-rendered content can be implemented later.
+Project cards can now be added, edited, deleted and reordered at `/admin/projects.php` (up to 20). Choose one of the four existing artwork styles. This phase **does not** upload images, edit navigation or the privacy policy. It does not update GitHub files automatically. Since the homepage remains static with JavaScript content substitution, SEO crawlers and visitors with JS disabled may see the fallback copy instead of CMS edits. Server-rendered content can be implemented later.
 
 ## Project metadata and compatibility
 
-Each existing project card now has an editable destination URL (HTTP or HTTPS only; embedded credentials are rejected) and 1–6 comma-separated technology tags (maximum 40 bytes each). The frontend uses DOM text nodes for tags and validates link protocols before updating href attributes. It does not interpret HTML from the CMS. Project cards, their visual artwork, and their order are still defined in `index.html`.
+Each existing project card now has an editable destination URL (HTTP or HTTPS only; embedded credentials are rejected) and 1–6 comma-separated technology tags (maximum 40 bytes each). The frontend uses DOM text nodes for tags and validates link protocols before updating href attributes. It does not interpret HTML from the CMS. The static four cards in `index.html` remain a fallback. The CMS project endpoint dynamically renders ordered project cards using the four existing artwork templates; newly added projects reuse a selected style.
 
 Existing `content.json` files from phase 1 remain compatible: missing metadata keys receive the defaults on read and are included on the next save. No database migration, new PHP dependencies or change to `admin/config.php` is needed. Back up the JSON file before deployment as usual.
+
+## Project storage, backups and rollback
+
+The first visit to the project manager imports the four default cards from existing CMS text fields. Nothing is written until you save, reorder, add or delete a project. On first save, the manager writes `projects.json` in the configured private `CMS_STORAGE_DIR`. Later saves create `projects.previous.json`, containing the immediately preceding version. Preserve both files during deployments. For manual rollback, back up the current file and restore `projects.previous.json` to `projects.json` in the private storage directory. This backup is **only one version deep**, not a full revision history. Old project text fields remain in `content.json` for backwards compatibility, but after project management is activated, edit project data only in `/admin/projects.php`.
+
+Project changes publish immediately. There is not yet a draft/preview workflow or image upload library. Visitors without JavaScript, and some crawlers, still see the original static cards.
 
 ## Configure on Junda/cPanel (required before login)
 
@@ -40,8 +46,9 @@ Run locally from the repository root with PHP 8+:
 
 ```bash
 php admin/tests/content_test.php
+php admin/tests/projects_test.php
 ```
 
 The unit test uses a temporary directory outside the site and cleans up after itself. The `Portfolio CMS checks` GitHub Action runs PHP syntax checks and this test on relevant pull requests. Use a PHP-enabled local web server and a private test config for browser testing, not a static Live Server.
 
-For future expansion: images/media, adding/removing/reordering projects, content previews, revision history and proper server-side rendering.
+For future expansion: image uploads/media library, drafts with preview, revision history, concurrent editing protection and server-side rendering.
