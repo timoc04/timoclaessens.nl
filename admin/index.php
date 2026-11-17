@@ -2,6 +2,7 @@
 declare(strict_types=1);
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/drafts.php';
+require_once __DIR__ . '/includes/revisions.php';
 cms_start_session();
 cms_require_login();
 
@@ -25,9 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $action = $_POST['action'] ?? '';
         $expectedDraft = $_POST['draft_revision'] ?? null;
         $expectedLive = $_POST['live_revision'] ?? null;
-        if (!is_string($action) || !is_string($expectedDraft) || !is_string($expectedLive)) {
-            throw new InvalidArgumentException('Invalid request.');
-        }
+        if (!is_string($action)) throw new InvalidArgumentException('Invalid request.');
+        cms_require_revisions($expectedDraft, $expectedLive);
         if ($action === 'save_draft') {
             $posted = $_POST['content'] ?? null;
             if (!is_array($posted)) throw new InvalidArgumentException('Missing content.');
