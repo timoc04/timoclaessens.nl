@@ -33,7 +33,7 @@ try {
         throw new RuntimeException('Stale publish accepted.');
     } catch (DomainException $expected) {}
     check_project_draft(cms_read_project_draft() === cms_validate_projects($updated), 'Conflict lost draft.');
-    check_project_draft(cms_read_projects() === $newLive, 'Conflict changed published projects.');
+    check_project_draft(cms_read_projects() === cms_validate_projects($newLive), 'Conflict changed published projects.');
     cms_project_draft_action('publish', null, cms_projects_revision($updated), cms_projects_revision($newLive));
     check_project_draft(cms_read_project_draft() === null, 'Published draft not removed.');
     check_project_draft(cms_read_projects() === cms_validate_projects($updated), 'Draft not published.');
