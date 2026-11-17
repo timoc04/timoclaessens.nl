@@ -2,3 +2,12 @@
 # If cPanel already has a root .htaccess, merge this directive into it
 # instead of overwriting existing hosting or redirect rules.
 ErrorDocument 404 /404.html
+
+# Baseline security headers for the public portfolio.
+# Header directives require mod_headers; the guard avoids errors if unavailable.
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set X-Frame-Options "DENY"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+</IfModule>
