@@ -1,0 +1,5 @@
+/* Visible unpublished-preview indicator, separate from the live homepage. */
+.cms-preview-mode{padding-top:54px}
+.cms-preview-banner{position:fixed;z-index:10000;top:0;left:0;right:0;min-height:54px;padding:10px 22px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;background:#17382d;color:#fff;font:600 14px/1.4 Inter,system-ui,sans-serif;box-shadow:0 2px 12px #0002}
+.cms-preview-banner a{color:#fff;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:540px){.cms-preview-mode{padding-top:84px}.cms-preview-banner{min-height:84px;font-size:12px;gap:8px}}

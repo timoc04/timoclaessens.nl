@@ -29,7 +29,7 @@ const cmsElements = document.querySelectorAll('[data-cms]');
 const cmsLinks = document.querySelectorAll('[data-cms-url]');
 const cmsTags = document.querySelectorAll('[data-cms-tags]');
 if (cmsElements.length) {
-  fetch('/admin/api/content.php', { cache: 'no-store', credentials: 'omit' })
+  fetch(document.documentElement.dataset.cmsPreview === 'true' ? '/admin/api/preview-content.php' : '/admin/api/content.php', { cache: 'no-store', credentials: document.documentElement.dataset.cmsPreview === 'true' ? 'same-origin' : 'omit' })
     .then(response => {
       if (!response.ok) throw new Error('CMS content unavailable');
       return response.json();
@@ -66,6 +66,11 @@ if (cmsElements.length) {
       });
     })
     .catch(() => {
+      if (document.documentElement.dataset.cmsPreview === 'true') {
+        document.body.dataset.previewError = 'true';
+        const banner = document.querySelector('.cms-preview-banner');
+        if (banner) banner.querySelector('strong').textContent = 'Preview could not load — sign in again or reload';
+      }
       // Keep the content already in index.html when the CMS API is unavailable.
     });
 }
