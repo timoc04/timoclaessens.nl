@@ -75,7 +75,7 @@ foreach (cms_fields() as $key => $field) {
 <meta name="robots" content="noindex,nofollow">
 <title>Content manager | Timo Claessens</title>
 <link rel="icon" href="/assets/icons/favicon.svg?v=f4139c4" type="image/svg+xml">
-<link rel="stylesheet" href="/admin/admin.css">
+<link rel="stylesheet" href="/admin/admin.css?v=cf16eb5f">
 <script defer src="/admin/drafts.js"></script>
 </head>
 <body>
