@@ -14,11 +14,14 @@ The portfolio is a lightweight HTML/CSS/JavaScript site with an optional PHP con
 ├── assets/
 │   ├── css/style.css           # Portfolio styles
 │   ├── icons/                  # Shared logo, favicon and generated PNG icons
-│   └── js/main.js              # Portfolio interactions
+│   ├── js/main.js              # Portfolio interactions
+│   └── js/projects.js          # CMS project cards
 ├── admin/                      # Portfolio CMS (separate from signage)
 │   ├── index.php               # Authenticated text editor
+│   ├── projects.php            # Project manager (CRUD + ordering)
 │   ├── login.php / logout.php  # CMS authentication
 │   ├── api/content.php         # Public plain-text content endpoint
+│   ├── api/projects.php        # Public project feed
 │   ├── includes/              # Auth and JSON storage helpers
 │   ├── config.example.php      # Private config template
 │   └── README.md               # CMS setup and backup guidance
@@ -63,7 +66,7 @@ Then visit `http://localhost:8000`. This previews **only the static portfolio**;
 
 A separate, optional PHP CMS at `/admin/` can edit the homepage introduction, About text, selected project titles, descriptions, URLs and technology tags, expertise introduction and contact introduction. It keeps the existing static HTML as a fallback and loads published plain-text changes from `/admin/api/content.php`. It does **not** share signage accounts or configuration.
 
-**Server-side setup is required before the CMS works:** create an untracked `admin/config.php` from `admin/config.example.php`, set a password-hashed account and a private writable storage directory outside `public_html`. See [CMS installation and safety notes](admin/README.md). Never commit real credentials or delete the private CMS storage during cPanel deployments. Phase 2 also supports project links and tags. It does not yet cover images, adding/removing projects or server-side SEO rendering.
+**Server-side setup is required before the CMS works:** create an untracked `admin/config.php` from `admin/config.example.php`, set a password-hashed account and a private writable storage directory outside `public_html`. See [CMS installation and safety notes](admin/README.md). Never commit real credentials or delete the private CMS storage during cPanel deployments. The project manager at `/admin/projects.php` supports adding, editing, deleting and ordering up to 20 projects with predefined artwork styles. The project data lives in private `projects.json` (plus `projects.previous.json` backup), outside Git and the document root. It does not yet support uploaded images, draft publishing or server-side SEO rendering.
 
 ## Custom 404 page
 
@@ -105,7 +108,7 @@ After merging, delete obsolete feature branches if they are no longer needed.
 ### Automated checks
 
 - `.github/workflows/cache-busting.yml` runs on relevant pushes to `main` (or manually), renders home-screen icons and runs `scripts/version_assets.py`. The script adds content hashes such as `?v=77e1e34` to configured asset URLs.
-- `.github/workflows/portfolio-cms.yml` lints CMS PHP, checks the JavaScript syntax and runs the CMS JSON storage regression test.
+- `.github/workflows/portfolio-cms.yml` lints CMS PHP, checks the JavaScript syntax and runs CMS content and project storage regression tests.
 - `.github/workflows/signage-security.yml` runs on signage-related pull requests and pushes to `main`. It checks PHP syntax, authentication and rate limiting, plus JSON settings storage and malformed-file handling. It is **not** a full integration or penetration test.
 
 If you add a new asset reference or PHP page, update `scripts/version_assets.py` and the relevant workflow path filters as needed.
