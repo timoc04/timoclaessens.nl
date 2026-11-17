@@ -3,7 +3,7 @@
   --bg:#f6f7f5;
   --paper:#fff;
   --text:#192725;
-  --muted:#68776f;
+  --muted:#617067;
   --green:#346d56;
   --dark:#17382d;
   --border:#dce4dd;
@@ -217,7 +217,7 @@ h1,h2,h3,p {
 
 .hero-footnote {
   font-size:12px;
-  color:#8a9990;
+  color:#617067;
   margin-top:42px
 }
 
@@ -772,7 +772,7 @@ h2 {
 .footer-content p {
   margin:0;
   font-size:11px;
-  color:#829087
+  color:#617067
 }
 
 .footer-content>div {
