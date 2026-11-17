@@ -109,8 +109,16 @@ function cms_read_projects(): array
     return cms_validate_projects($data);
 }
 
-/** Atomic write and a previous-version backup, both outside public_html. */
-function cms_save_projects(array $projects): void
+/** Stable revision of the validated project list for optimistic concurrency. */
+function cms_projects_revision(array $projects): string
+{
+    return hash('sha256', json_encode(cms_validate_projects($projects), JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
+}
+
+/** Atomic write and a previous-version backup, both outside public_html.
+ * If supplied, the expected revision is verified while holding the exclusive lock.
+ */
+function cms_save_projects(array $projects, ?string $expectedRevision = null): void
 {
     $validated = cms_validate_projects($projects);
     $dir = cms_storage_directory();
@@ -120,6 +128,9 @@ function cms_save_projects(array $projects): void
     $temp = false;
     try {
         if (!flock($lock, LOCK_EX)) throw new RuntimeException('Could not lock project storage.');
+        if ($expectedRevision !== null && !hash_equals(cms_projects_revision(cms_read_projects()), $expectedRevision)) {
+            throw new DomainException('Projects were updated in another tab or session. Refresh the page before editing.');
+        }
         $json = json_encode($validated, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR) . "\n";
         $temp = tempnam($dir, '.projects-');
         if ($temp === false || file_put_contents($temp, $json) !== strlen($json)) {
