@@ -23,7 +23,7 @@ class AssetCacheTests(unittest.TestCase):
     def test_assets_have_versioned_references(self):
         homepage = (ROOT / "index.html").read_text()
         for asset in ("assets/css/style.css", "assets/js/main.js", "assets/js/projects.js"):
-            self.assertRegex(homepage, re.escape("/" + asset) + r"\\?v=[a-f0-9]{7}")
+            self.assertRegex(homepage, re.escape("/" + asset) + r"\?v=[a-f0-9]{7}")
 
 
 if __name__ == "__main__":
