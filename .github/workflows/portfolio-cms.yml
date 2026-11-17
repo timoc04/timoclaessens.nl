@@ -43,6 +43,8 @@ jobs:
         run: php admin/tests/drafts_test.php
       - name: Project draft regression checks
         run: php admin/tests/project_drafts_test.php
+      - name: CMS HTTP integration checks
+        run: python3 scripts/test_cms_http.py
       - name: Check JavaScript syntax
         run: |
           node --check assets/js/main.js
