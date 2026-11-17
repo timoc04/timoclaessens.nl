@@ -66,6 +66,11 @@ if (cmsElements.length) {
       });
     })
     .catch(() => {
+      if (document.documentElement.dataset.cmsPreview === 'true') {
+        document.body.dataset.previewError = 'true';
+        const banner = document.querySelector('.cms-preview-banner');
+        if (banner) banner.querySelector('strong').textContent = 'Preview could not load — sign in again or reload';
+      }
       // Keep the content already in index.html when the CMS API is unavailable.
     });
 }
