@@ -15,7 +15,7 @@ if ($html === false) {
 // Explicit extension points keep preview rendering independent of incidental
 // HTML formatting. Fail closed if the homepage contract changes.
 $replacements = [
-    '<!-- CMS_PREVIEW_HTML_ATTRIBUTES -->' => ' data-cms-preview="true"',
+    'data-cms-preview="false"' => 'data-cms-preview="true"',
     '<!-- CMS_PREVIEW_HEAD -->' => '<meta name="robots" content="noindex,nofollow"><link rel="stylesheet" href="/admin/preview.css?v=1">',
     '<!-- CMS_PREVIEW_BODY -->' => '<script defer src="/admin/preview.js?v=1"></script>',
 ];
