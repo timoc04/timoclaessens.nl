@@ -4,8 +4,8 @@ declare(strict_types=1);
 require_once __DIR__ . '/content.php';
 
 /**
- * Project records live in a separate private JSON file. Legacy CMS fields
- * remain untouched so existing content.json files work without migration.
+ * Default project cards are used until a projects.json file is published.
+ * Project editing is owned exclusively by the separate Projects manager.
  */
 function cms_project_styles(): array
 {
@@ -14,23 +14,48 @@ function cms_project_styles(): array
 
 function cms_project_defaults(): array
 {
-    $copy = cms_read_content();
-    $types = ['CLOUD & DEVOPS', 'WEB DEVELOPMENT', 'BACKEND DEVELOPMENT', 'PERSONAL LAB'];
-    $labels = ['CLOUD INFRASTRUCTURE', 'WEB APPLICATION', 'SOFTWARE & MONITORING', 'SELF-HOSTED SYSTEMS'];
-    $projects = [];
-    for ($i = 1; $i <= 4; $i++) {
-        $projects[] = [
-            'id' => 'project-' . $i,
-            'title' => $copy["project_{$i}_title"],
-            'description' => $copy["project_{$i}_description"],
-            'url' => $copy["project_{$i}_url"],
-            'tags' => array_map('trim', explode(',', $copy["project_{$i}_tags"])),
-            'category' => $types[$i - 1],
-            'art_label' => $labels[$i - 1],
-            'style' => cms_project_styles()[$i - 1],
-        ];
-    }
-    return $projects;
+    return [
+        [
+            'id' => 'project-1',
+            'title' => 'AWS Infrastructure & Automation',
+            'description' => 'Designing and deploying scalable infrastructure on AWS using Terraform, Ansible and CI/CD workflows.',
+            'url' => 'https://github.com/timoc04',
+            'tags' => ['AWS', 'Terraform', 'Ansible', 'GitHub Actions'],
+            'category' => 'CLOUD & DEVOPS',
+            'art_label' => 'CLOUD INFRASTRUCTURE',
+            'style' => 'cloud',
+        ],
+        [
+            'id' => 'project-2',
+            'title' => 'Digital Signage Platform',
+            'description' => 'A browser-based digital signage solution for managing and displaying content across screens.',
+            'url' => 'https://github.com/timoc04/timoclaessens.nl/tree/main/projects/signage',
+            'tags' => ['PHP', 'JavaScript', 'HTML & CSS'],
+            'category' => 'WEB DEVELOPMENT',
+            'art_label' => 'WEB APPLICATION',
+            'style' => 'signage',
+        ],
+        [
+            'id' => 'project-3',
+            'title' => 'Cloud Monitoring API',
+            'description' => 'A Python Flask API integrated with Azure services, containerised and deployed through automated workflows.',
+            'url' => 'https://github.com/timoc04/monitoring-api',
+            'tags' => ['Python', 'Flask', 'Azure', 'Docker'],
+            'category' => 'BACKEND DEVELOPMENT',
+            'art_label' => 'SOFTWARE & MONITORING',
+            'style' => 'api',
+        ],
+        [
+            'id' => 'project-4',
+            'title' => 'Homelab & Self-Hosting',
+            'description' => 'Hands-on exploration of virtualisation, Linux, networking and self-hosted services with Proxmox.',
+            'url' => 'https://github.com/timoc04',
+            'tags' => ['Proxmox', 'Linux', 'Networking'],
+            'category' => 'PERSONAL LAB',
+            'art_label' => 'SELF-HOSTED SYSTEMS',
+            'style' => 'homelab',
+        ],
+    ];
 }
 
 function cms_project_path(): string
