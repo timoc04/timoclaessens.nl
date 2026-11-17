@@ -5,7 +5,6 @@ require_once __DIR__ . '/content.php';
 
 /**
  * Private draft for homepage copy. Never read by public CMS endpoints.
- * Project fields are retained solely for backwards compatibility.
  */
 function cms_content_draft_path(): string
 {
