@@ -2,6 +2,7 @@
 declare(strict_types=1);
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/project_drafts.php';
+require_once __DIR__ . '/includes/revisions.php';
 cms_start_session();
 cms_require_login();
 
@@ -25,11 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $expectedRevision = $_POST['revision'] ?? null;
         $expectedLive = $_POST['live_revision'] ?? null;
-        if (!is_string($expectedRevision) || !is_string($expectedLive) ||
-            ($expectedRevision !== 'none' && !preg_match('/^[a-f0-9]{64}$/D', $expectedRevision)) ||
-            !preg_match('/^[a-f0-9]{64}$/D', $expectedLive)) {
-            throw new InvalidArgumentException('Invalid project revision. Reload the page.');
-        }
+        cms_require_revisions($expectedRevision, $expectedLive);
         $action = $_POST['action'] ?? '';
         if ($action === 'publish' || $action === 'discard') {
             cms_project_draft_action($action, null, $expectedRevision, $expectedLive);
