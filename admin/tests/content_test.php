@@ -13,7 +13,7 @@ function check(bool $condition, string $message): void
 
 try {
     $defaults = cms_read_content();
-    check(count($defaults) === 22, 'Expected fourteen editable fields.');
+    check(count($defaults) === 22, 'Expected twenty-two editable fields.');
     check($defaults['project_1_title'] === 'AWS Infrastructure & Automation', 'Unexpected project default.');
 
     $modified = $defaults;
