@@ -1,0 +1,46 @@
+name: Portfolio quality checks
+
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'privacy/**'
+      - '404.html'
+      - '404.css'
+      - 'assets/**'
+      - 'scripts/**'
+      - 'sitemap.xml'
+      - 'robots.txt'
+      - '.github/workflows/portfolio-quality.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'privacy/**'
+      - '404.html'
+      - '404.css'
+      - 'assets/**'
+      - 'scripts/**'
+      - 'sitemap.xml'
+      - 'robots.txt'
+      - '.github/workflows/portfolio-quality.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check portfolio structure and metadata
+        run: python3 scripts/test_site.py
+      - name: Check browser JavaScript syntax
+        run: |
+          node --check assets/js/main.js
+          node --check assets/js/projects.js
+      - name: Check cache-version script syntax
+        run: python3 -m py_compile scripts/version_assets.py

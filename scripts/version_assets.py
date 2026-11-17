@@ -6,12 +6,13 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGES = [
-    "index.html", "privacy/index.html",
+    "index.html", "privacy/index.html", "404.html",
     "projects/signage/admin/index.php", "projects/signage/admin/login.php",
     "projects/signage/index.php",
 ]
 ASSETS = [
-    "assets/css/style.css", "privacy/privacy.css", "assets/js/main.js",
+    "assets/css/style.css", "privacy/privacy.css", "404.css",
+    "assets/js/main.js", "assets/js/projects.js",
     "assets/icons/favicon.svg", "assets/icons/apple-touch-icon.png",
     "projects/signage/admin/admin.css",
 ]

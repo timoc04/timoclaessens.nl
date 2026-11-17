@@ -9,6 +9,8 @@ on:
       - 'projects/signage/admin/**'
       - 'projects/signage/index.php'
       - 'index.html'
+      - '404.html'
+      - '404.css'
       - 'scripts/version_assets.py'
   workflow_dispatch:
 
@@ -53,7 +55,7 @@ jobs:
 
       - name: Commit updated asset URLs
         run: |
-          git add index.html privacy/index.html projects/signage/admin/index.php projects/signage/admin/login.php projects/signage/index.php assets/icons/*.png
+          git add index.html 404.html privacy/index.html projects/signage/admin/index.php projects/signage/admin/login.php projects/signage/index.php assets/icons/*.png
           if git diff --cached --quiet; then
             echo "Asset versions are already current."
             exit 0
