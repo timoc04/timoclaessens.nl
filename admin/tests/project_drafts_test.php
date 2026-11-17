@@ -15,7 +15,7 @@ try {
     $draft = $live;
     $draft[0]['title'] = 'Unpublished project';
     cms_project_draft_action('save_draft', $draft, 'none', $liveRevision);
-    check_project_draft(cms_read_project_draft() === $draft, 'Draft not saved.');
+    check_project_draft(cms_read_project_draft() === cms_validate_projects($draft), 'Draft not saved.');
     check_project_draft(cms_read_projects() === $live, 'Saving draft changed live projects.');
     $revision = cms_projects_revision($draft);
     $updated = $draft;
@@ -32,11 +32,11 @@ try {
         cms_project_draft_action('publish', null, cms_projects_revision($updated), $liveRevision);
         throw new RuntimeException('Stale publish accepted.');
     } catch (DomainException $expected) {}
-    check_project_draft(cms_read_project_draft() === $updated, 'Conflict lost draft.');
+    check_project_draft(cms_read_project_draft() === cms_validate_projects($updated), 'Conflict lost draft.');
     check_project_draft(cms_read_projects() === $newLive, 'Conflict changed published projects.');
     cms_project_draft_action('publish', null, cms_projects_revision($updated), cms_projects_revision($newLive));
     check_project_draft(cms_read_project_draft() === null, 'Published draft not removed.');
-    check_project_draft(cms_read_projects() === $updated, 'Draft not published.');
+    check_project_draft(cms_read_projects() === cms_validate_projects($updated), 'Draft not published.');
     cms_project_draft_action('save_draft', $live, 'none', cms_projects_revision($updated));
     cms_project_draft_action('discard', null, cms_projects_revision($live), cms_projects_revision($updated));
     check_project_draft(cms_read_project_draft() === null, 'Discard failed.');
