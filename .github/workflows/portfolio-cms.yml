@@ -6,6 +6,7 @@ on:
     paths:
       - '.htaccess'
       - 'scripts/test_public_headers.py'
+      - 'scripts/test_cms_http.py'
       - 'admin/**'
       - 'scripts/backup_cms.py'
       - 'scripts/test_backup_cms.py'
@@ -17,6 +18,13 @@ on:
       - '.github/workflows/portfolio-cms.yml'
   pull_request:
     paths:
+      - '.htaccess'
+      - 'scripts/backup_cms.py'
+      - 'scripts/test_backup_cms.py'
+      - 'scripts/.htaccess'
+      - 'scripts/test_apache_protection.py'
+      - 'scripts/test_public_headers.py'
+      - 'scripts/test_cms_http.py'
       - 'admin/**'
       - 'index.html'
       - 'assets/js/main.js'
