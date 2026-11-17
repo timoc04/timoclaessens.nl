@@ -95,11 +95,11 @@ function cms_project_editor(array $project, string $action): void
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><title>Projects | Portfolio CMS</title>
-<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/icons/favicon.svg?v=f4139c4" type="image/svg+xml">
 <link rel="stylesheet" href="/admin/admin.css"></head>
 <body>
 <header class="admin-header"><div class="container topbar">
-<a class="brand" href="/admin/"><img src="/assets/icons/favicon.svg" width="38" height="38" alt="tc. logo"> Timo Claessens <span>/ Project Manager</span></a>
+<a class="brand" href="/admin/"><img src="/assets/icons/favicon.svg?v=f4139c4" width="38" height="38" alt="tc. logo"> Timo Claessens <span>/ Project Manager</span></a>
 <div class="header-actions"><a class="button secondary" href="/admin/">Edit page copy</a><a class="button secondary" href="/" target="_blank" rel="noopener noreferrer">View website ↗</a>
 <form method="post" action="/admin/logout.php"><input type="hidden" name="csrf_token" value="<?= cms_escape(cms_csrf_token()) ?>"><button class="button secondary" type="submit">Sign out</button></form></div>
 </div></header>
