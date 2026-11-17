@@ -159,3 +159,7 @@ The project manager uses an optimistic revision check inside its existing file l
 ### Project drafts
 
 The project manager now saves additions, edits, removals and ordering to private `projects.draft.json` until **Publish project draft** is clicked. The public project API continues to serve only `projects.json`. The draft is preserved across sessions and deployments, with conflict checks and explicit discard. See `admin/README.md` and run `php admin/tests/project_drafts_test.php`.
+
+### Draft preview
+
+Use **Preview drafts** from either CMS editor to open `/admin/preview.php`. The authenticated, no-store, noindex page reuses the real homepage layout and loads unpublished content and project drafts through private, session-protected read-only endpoints. The public homepage and public APIs continue to show published content. Preview only reflects **saved** drafts, not unsaved form edits. The preview has a persistent unpublished banner. Sign in again if your CMS session expires; never share preview links as public links.
