@@ -1,0 +1,49 @@
+name: Live Lighthouse audit
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: browser-actions/setup-chrome@v1
+        id: chrome
+      - name: Install Lighthouse
+        run: npm install --no-save --no-package-lock lighthouse@12
+      - name: Audit mobile and desktop
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          mkdir -p lighthouse-reports
+          for mode in mobile desktop; do
+            if [ "$mode" = desktop ]; then
+              preset="--preset=desktop"
+            else
+              preset=""
+            fi
+            ./node_modules/.bin/lighthouse https://timoclaessens.nl/ \
+              --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" \
+              --only-categories=performance,accessibility,best-practices,seo \
+              --output=json --output-path="lighthouse-reports/${mode}.json" \
+              $preset
+          done
+      - name: Summarise audit scores
+        if: always()
+        run: node scripts/summarise_lighthouse.cjs
+      - name: Upload audit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-live-reports
+          path: lighthouse-reports/
+          if-no-files-found: warn
+          retention-days: 14
