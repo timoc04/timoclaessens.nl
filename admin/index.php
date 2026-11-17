@@ -99,7 +99,7 @@ foreach (cms_fields() as $key => $field) {
 <?php if ($notice !== ''): ?><div class="notice success" role="status"><?= cms_escape($notice) ?></div><?php endif; ?>
 <?php if ($error !== ''): ?><div class="notice error" role="alert"><?= cms_escape($error) ?></div><?php endif; ?>
 <p class="notice"><?= $draft !== null ? "Editing saved draft — the public site is unchanged." : "No draft saved — displaying published copy." ?></p>
-<form method="post" action="/admin/" class="editor">
+<form method="post" action="/admin/" class="editor" data-draft-editor>
 <input type="hidden" name="csrf_token" value="<?= cms_escape(cms_csrf_token()) ?>">
 <input type="hidden" name="draft_revision" value="<?= cms_escape($draftRevision) ?>">
 <input type="hidden" name="live_revision" value="<?= cms_escape($liveRevision) ?>">
@@ -125,7 +125,7 @@ foreach (cms_fields() as $key => $field) {
 </div>
 </section>
 <?php endforeach; ?>
-<div class="save-bar"><p>Saving a draft does not change your public website.</p><button class="button primary" type="submit" name="action" value="save_draft">Save draft</button></div>
+<div class="save-bar"><p>Saving a draft does not change your public website.</p><button class="button primary" type="submit" name="action" value="save_draft" disabled>Save draft</button></div>
 </form>
 <?php if ($draft !== null): ?>
 <div class="save-bar" style="margin-top:18px">
