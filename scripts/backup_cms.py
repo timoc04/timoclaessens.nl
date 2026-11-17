@@ -13,14 +13,19 @@ FILES = ("content.json", "content.draft.json", "projects.json",
 
 
 def create_backup(source: Path, destination: Path) -> Path:
-    source = source.expanduser().resolve(strict=True)
-    destination = destination.expanduser().resolve(strict=True)
+    source = source.expanduser()
+    destination = destination.expanduser()
+    if source.is_symlink() or destination.is_symlink():
+        raise ValueError("Do not use symlinked source or backup directories.")
+    source = source.resolve(strict=True)
+    destination = destination.resolve(strict=True)
+    site_root = Path(__file__).resolve().parents[1]
+    if destination == site_root or site_root in destination.parents:
+        raise ValueError("Backup destination must be outside the website directory.")
     if not source.is_dir() or not destination.is_dir():
         raise ValueError("Source and destination must be existing directories.")
     if source == destination or source in destination.parents or destination in source.parents:
         raise ValueError("Backup directory must be separate from CMS storage.")
-    if destination.is_symlink():
-        raise ValueError("Do not use a symlinked backup directory.")
     snapshot = {}
     for name in FILES:
         path = source / name
