@@ -14,6 +14,7 @@ on:
       - 'admin/**'
       - 'index.html'
       - 'assets/js/main.js'
+      - 'assets/js/projects.js'
       - '.github/workflows/portfolio-cms.yml'
 
 permissions:
