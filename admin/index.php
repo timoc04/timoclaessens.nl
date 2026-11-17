@@ -84,7 +84,7 @@ foreach (cms_fields() as $key => $field) {
 <a class="brand" href="/"><img src="/assets/icons/favicon.svg?v=f4139c4" width="38" height="38" alt="tc. logo"> Timo Claessens <span>/ Content Manager</span></a>
 <div class="header-actions">
 <a class="button secondary" href="/admin/projects.php">Manage projects</a>
-<a class="button secondary" href="/" target="_blank" rel="noopener noreferrer">View website ↗</a>
+<a class="button secondary" href="/admin/preview.php" target="_blank" rel="noopener noreferrer">Preview drafts ↗</a><a class="button secondary" href="/" target="_blank" rel="noopener noreferrer">View website ↗</a>
 <form method="post" action="/admin/logout.php">
 <input type="hidden" name="csrf_token" value="<?= cms_escape(cms_csrf_token()) ?>">
 <button class="button secondary" type="submit">Sign out</button>
