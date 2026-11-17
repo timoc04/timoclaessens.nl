@@ -34,6 +34,12 @@ class PortfolioChecks(unittest.TestCase):
         preview = (ROOT / "admin/preview.php").read_text(encoding="utf-8")
         self.assertIn("cms_require_login();", preview)
         self.assertIn("data-cms-preview", preview)
+        self.assertNotIn("preg_replace(", preview)
+        self.assertIn("substr_count($html, $marker) !== 1", preview)
+        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        self.assertEqual(homepage.count('data-cms-preview="false"'), 1)
+        for marker in ("CMS_PREVIEW_HEAD", "CMS_PREVIEW_BODY"):
+            self.assertEqual(homepage.count(f"<!-- {marker} -->"), 1)
         self.assertIn("noindex,nofollow", preview)
         self.assertIn("no-store", preview)
         for kind, draft_reader, live_reader in (

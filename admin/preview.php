@@ -12,13 +12,21 @@ if ($html === false) {
     http_response_code(503);
     exit('Preview is temporarily unavailable.');
 }
-$html = preg_replace('/<html\\s+lang="en">/', '<html lang="en" data-cms-preview="true">', $html, 1);
-if (!is_string($html)) {
-    http_response_code(503);
-    exit('Preview is temporarily unavailable.');
+// Explicit extension points keep preview rendering independent of incidental
+// HTML formatting. Fail closed if the homepage contract changes.
+$replacements = [
+    'data-cms-preview="false"' => 'data-cms-preview="true"',
+    '<!-- CMS_PREVIEW_HEAD -->' => '<meta name="robots" content="noindex,nofollow"><link rel="stylesheet" href="/admin/preview.css?v=1">',
+    '<!-- CMS_PREVIEW_BODY -->' => '<script defer src="/admin/preview.js?v=1"></script>',
+];
+foreach ($replacements as $marker => $replacement) {
+    if (substr_count($html, $marker) !== 1) {
+        error_log('Portfolio CMS preview marker missing or duplicated: ' . $marker);
+        http_response_code(503);
+        exit('Preview is temporarily unavailable.');
+    }
+    $html = str_replace($marker, $replacement, $html);
 }
-$html = str_replace('<head>', '<head><meta name="robots" content="noindex,nofollow"><link rel="stylesheet" href="/admin/preview.css?v=1">', $html);
-$html = str_replace('</body>', '<script defer src="/admin/preview.js?v=1"></script></body>', $html);
 header('Content-Type: text/html; charset=utf-8');
 header('Cache-Control: no-store, private');
 echo $html;
