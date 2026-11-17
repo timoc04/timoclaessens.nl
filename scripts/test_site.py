@@ -37,7 +37,8 @@ class PortfolioChecks(unittest.TestCase):
         self.assertNotIn("preg_replace(", preview)
         self.assertIn("substr_count($html, $marker) !== 1", preview)
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
-        for marker in ("CMS_PREVIEW_HTML_ATTRIBUTES", "CMS_PREVIEW_HEAD", "CMS_PREVIEW_BODY"):
+        self.assertEqual(homepage.count('data-cms-preview="false"'), 1)
+        for marker in ("CMS_PREVIEW_HEAD", "CMS_PREVIEW_BODY"):
             self.assertEqual(homepage.count(f"<!-- {marker} -->"), 1)
         self.assertIn("noindex,nofollow", preview)
         self.assertIn("no-store", preview)
