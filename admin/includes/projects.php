@@ -7,6 +7,11 @@ require_once __DIR__ . '/content.php';
  * Default project cards are used until a projects.json file is published.
  * Project editing is owned exclusively by the separate Projects manager.
  */
+function cms_project_styles(): array
+{
+    return ['cloud', 'signage', 'api', 'homelab'];
+}
+
 function cms_project_defaults(): array
 {
     return [
