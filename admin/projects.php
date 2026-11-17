@@ -119,7 +119,7 @@ function cms_project_editor(array $project, string $action): void
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><title>Projects | Portfolio CMS</title>
 <link rel="icon" href="/assets/icons/favicon.svg?v=f4139c4" type="image/svg+xml">
-<link rel="stylesheet" href="/admin/admin.css?v=cf16eb5f"><script defer src="/admin/projects.js?v=project-drafts-1"></script></head>
+<link rel="stylesheet" href="/admin/admin.css?v=cf16eb5f"><script defer src="/admin/forms.js"></script><script defer src="/admin/projects.js?v=project-drafts-1"></script></head>
 <body>
 <header class="admin-header"><div class="container topbar">
 <a class="brand" href="/admin/"><img src="/assets/icons/favicon.svg?v=f4139c4" width="38" height="38" alt="tc. logo"> Timo Claessens <span>/ Project Manager</span></a>
