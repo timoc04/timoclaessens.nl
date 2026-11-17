@@ -21,11 +21,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!is_array($posted)) {
             throw new InvalidArgumentException('Missing content.');
         }
-        $content = cms_validate_content($posted);
+        // Project fields are legacy data for initial migration only.
+        // Keep their existing values without exposing or accepting edits here.
+        $editable = [];
+        foreach (cms_fields() as $key => $field) {
+            if ($field['section'] === 'Projects') {
+                continue;
+            }
+            $editable[$key] = $posted[$key] ?? null;
+        }
+        $content = cms_validate_content(array_replace($content, $editable));
         cms_save_content($content);
         $notice = 'Changes saved successfully. Refresh the website to see them.';
     } catch (InvalidArgumentException $exception) {
-        $error = 'Please check the required fields, URLs (HTTP/HTTPS only) and tags (1–6, comma-separated).';
+        $error = 'Please fill in every field and respect the character limits.';
     } catch (Throwable $exception) {
         error_log('Portfolio CMS save error: ' . $exception->getMessage());
         http_response_code(500);
@@ -35,7 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $sections = [];
 foreach (cms_fields() as $key => $field) {
-    $sections[$field['section']][$key] = $field;
+    if ($field['section'] !== 'Projects') {
+        $sections[$field['section']][$key] = $field;
+    }
 }
 ?>
 <!doctype html>

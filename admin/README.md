@@ -52,3 +52,7 @@ php admin/tests/projects_test.php
 The unit test uses a temporary directory outside the site and cleans up after itself. The `Portfolio CMS checks` GitHub Action runs PHP syntax checks and this test on relevant pull requests. Use a PHP-enabled local web server and a private test config for browser testing, not a static Live Server.
 
 For future expansion: image uploads/media library, drafts with preview, revision history, concurrent editing protection and server-side rendering.
+
+## Editing page text versus projects
+
+The main `/admin/` editor contains only Hero, About, Expertise and Contact text. All project titles, descriptions, URLs, tags and ordering are edited exclusively at `/admin/projects.php` (Manage projects). The original project fields in private `content.json` are retained for backwards compatibility and initial project import; saving the main page does not change those legacy values. Do not delete `content.json` during deployment.

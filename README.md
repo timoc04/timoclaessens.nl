@@ -133,3 +133,5 @@ Email: info@timoclaessens.nl
 GitHub: [timoc04](https://github.com/timoc04)
 
 © Timo Claessens. All rights reserved.
+
+**CMS editing locations:** `/admin/` edits non-project homepage text; `/admin/projects.php` exclusively manages projects. Legacy project keys in private `content.json` are preserved for compatibility, not shown in the main editor.
