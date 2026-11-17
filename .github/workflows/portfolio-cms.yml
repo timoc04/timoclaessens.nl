@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
     paths:
+      - '.htaccess'
+      - 'scripts/test_public_headers.py'
       - 'admin/**'
       - 'scripts/backup_cms.py'
       - 'scripts/test_backup_cms.py'
@@ -53,6 +55,8 @@ jobs:
         run: python3 scripts/test_backup_cms.py
       - name: Apache CMS access protection checks
         run: python3 scripts/test_apache_protection.py
+      - name: Public HTML security header checks
+        run: python3 scripts/test_public_headers.py
       - name: Check JavaScript syntax
         run: |
           node --check assets/js/main.js
