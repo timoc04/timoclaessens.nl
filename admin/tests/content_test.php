@@ -13,16 +13,14 @@ function check(bool $condition, string $message): void
 
 try {
     $defaults = cms_read_content();
-    check(count($defaults) === 22, 'Expected twenty-two editable fields.');
-    check($defaults['project_1_title'] === 'AWS Infrastructure & Automation', 'Unexpected project default.');
+    check(count($defaults) === 6, 'Expected six editable copy fields.');
+    check(!array_key_exists('project_1_title', $defaults), 'Legacy project fields should not be editable.');
 
     $modified = $defaults;
     $modified['hero_intro'] = 'Hello from the CMS test';
-    $modified['project_1_title'] = 'Updated project';
     cms_save_content($modified);
     $loaded = cms_read_content();
     check($loaded['hero_intro'] === 'Hello from the CMS test', 'Hero change was not saved.');
-    check($loaded['project_1_title'] === 'Updated project', 'Project change was not saved.');
     check(is_file($directory . '/content.json'), 'Settings file missing.');
 
     $bad = $modified;
@@ -33,29 +31,18 @@ try {
     } catch (InvalidArgumentException $expected) {}
     check(cms_read_content() === $loaded, 'Invalid input overwrote stored data.');
 
-    // Existing phase-1 JSON is migrated in memory with new field defaults.
+    // Old project keys are ignored when reading a pre-migration content.json.
     $legacy = $loaded;
-    unset($legacy['project_1_url'], $legacy['project_1_tags']);
+    $legacy['project_1_title'] = 'Old project title';
+    $legacy['project_1_url'] = 'https://example.com/old-project';
     file_put_contents($directory . '/content.json', json_encode($legacy, JSON_THROW_ON_ERROR));
     $migrated = cms_read_content();
-    check($migrated['hero_intro'] === 'Hello from the CMS test', 'Legacy copy was lost.');
-    check($migrated['project_1_url'] === $defaults['project_1_url'], 'Missing URL default not restored.');
+    check($migrated === $loaded, 'Legacy project keys must not change homepage copy.');
 
-    foreach (['javascript:alert(1)', 'https://user:pass@example.com/path', 'ftp://example.com'] as $unsafe) {
-        $badUrl = $migrated;
-        $badUrl['project_1_url'] = $unsafe;
-        try {
-            cms_save_content($badUrl);
-            throw new RuntimeException('Unsafe URL was accepted: ' . $unsafe);
-        } catch (InvalidArgumentException $expected) {}
-    }
-    $badTags = $migrated;
-    $badTags['project_1_tags'] = 'one, two, three, four, five, six, seven';
-    try {
-        cms_save_content($badTags);
-        throw new RuntimeException('Too many tags were accepted.');
-    } catch (InvalidArgumentException $expected) {}
-    check(cms_read_content() === $migrated, 'Invalid metadata changed stored content.');
+    $extra = $loaded;
+    $extra['project_1_title'] = 'Not part of the copy CMS';
+    cms_save_content($extra);
+    check(cms_read_content() === $loaded, 'Legacy keys should not be persisted on save.');
 
     file_put_contents($directory . '/content.json', '{broken');
     try {
