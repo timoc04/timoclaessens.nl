@@ -4,7 +4,7 @@ A small PHP content editor for the portfolio at `timoclaessens.nl`. This is **no
 
 ## What you can edit
 
-Log in to `https://timoclaessens.nl/admin/` to edit the hero introduction, About text, four project titles, descriptions, destination URLs and technology tags, expertise introduction and contact introduction. The visual layout remains HTML/CSS. The homepage requests public plain-text content from `/admin/api/content.php` and replaces matching text nodes using `textContent`. If the CMS is unconfigured or unavailable, the static HTML copy remains visible; it is the original fallback, not necessarily your most recent edit.
+Log in to `https://timoclaessens.nl/admin/` to edit Hero, About, Expertise and Contact copy. Use `/admin/projects.php` for project titles, descriptions, links, tags and ordering. The visual layout remains HTML/CSS. The homepage requests public plain-text content from `/admin/api/content.php` and replaces matching text nodes using `textContent`. If the CMS is unconfigured or unavailable, the static HTML copy remains visible; it is the original fallback, not necessarily your most recent edit.
 
 Project cards can now be added, edited, deleted and reordered at `/admin/projects.php` (up to 20). Choose one of the four existing artwork styles. This phase **does not** upload images, edit navigation or the privacy policy. It does not update GitHub files automatically. Since the homepage remains static with JavaScript content substitution, SEO crawlers and visitors with JS disabled may see the fallback copy instead of CMS edits. Server-rendered content can be implemented later.
 
@@ -56,3 +56,11 @@ For future expansion: image uploads/media library, drafts with preview, revision
 ## Editing page text versus projects
 
 The main `/admin/` editor contains only Hero, About, Expertise and Contact text. All project titles, descriptions, URLs, tags and ordering are edited exclusively at `/admin/projects.php` (Manage projects). The original project fields in private `content.json` are retained for backwards compatibility and initial project import; saving the main page does not change those legacy values. Do not delete `content.json` during deployment.
+
+## Homepage copy drafts (first publishing phase)
+
+The main `/admin/` content editor now separates **Save draft** from **Publish saved draft**. Saving creates or replaces a validated `content.draft.json` in the private `CMS_STORAGE_DIR` and does **not** modify the live `content.json` used by `/admin/api/content.php`. A saved draft is loaded back into the editor on the next visit. Publishing explicitly copies the saved draft to live content and removes the draft; discarding deletes only the draft. Unsaved form changes are **not** included when clicking Publish: save the draft first.
+
+The editor uses a revision check to reject stale drafts from another tab. Publishing also verifies the live content revision from when the page was loaded. If a conflict occurs, reload and review the draft before publishing. Drafts are private server-side JSON and cannot be requested through the public API. They are not a preview feature or revision history. Existing `content.json` files, CMS accounts and project management are unaffected. Back up `content.draft.json` alongside live CMS files; do not delete it during cPanel deployments.
+
+Project management at `/admin/projects.php` **still publishes immediately**. Project drafts, previews and version history are planned separately.
