@@ -17,7 +17,7 @@ if (!is_string($html)) {
     http_response_code(503);
     exit('Preview is temporarily unavailable.');
 }
-$html = str_replace('<head>', '<head><meta name="robots" content="noindex,nofollow">', $html);
+$html = str_replace('<head>', '<head><meta name="robots" content="noindex,nofollow"><link rel="stylesheet" href="/admin/preview.css?v=1">', $html);
 $html = str_replace('</body>', '<script defer src="/admin/preview.js?v=1"></script></body>', $html);
 header('Content-Type: text/html; charset=utf-8');
 header('Cache-Control: no-store, private');
