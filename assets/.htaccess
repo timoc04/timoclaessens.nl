@@ -1,0 +1,7 @@
+# Cache only the portfolio's static assets, not HTML, PHP, CMS APIs or signage.
+# Asset URLs already use cache-busting query versions in the HTML templates.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(?:css|js|svg|png|jpe?g|webp|gif|ico|woff2?)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+</IfModule>
