@@ -107,7 +107,7 @@ class PortfolioChecks(unittest.TestCase):
         self.assertIn("--muted:#617067;", css)
         for selector in (".hero-footnote", ".footer-content p"):
             import re
-            rule = re.search(re.escape(selector) + r"\\s*\\{([^}]+)\\}", css)
+            rule = re.search(re.escape(selector) + r"\s*\{([^}]+)\}", css)
             self.assertIsNotNone(rule, selector)
             self.assertIn("color:#617067", rule.group(1))
         for foreground in ("#617067",):
