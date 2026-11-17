@@ -73,6 +73,25 @@ class PortfolioChecks(unittest.TestCase):
             if "/assets/css/style.css" in html:
                 self.assertIn(f"/assets/css/style.css?v={version}", html)
 
+    def test_mobile_navigation_accessibility(self):
+        script = (ROOT / "assets/js/main.js").read_text(encoding="utf-8")
+        for snippet in (
+            "window.matchMedia('(max-width: 650px)')",
+            "mobileNav.addEventListener('change'",
+            "closeMenu({ restoreFocus: true })",
+            "menuButton.focus()",
+            "event.key === 'Escape'",
+        ):
+            self.assertIn(snippet, script)
+        import hashlib
+        raw = (ROOT / "assets/js/main.js").read_bytes()
+        version = hashlib.sha1(("blob " + str(len(raw)) + "\0").encode() + raw).hexdigest()[:7]
+        for name in ("index.html", "privacy/index.html"):
+            html = (ROOT / name).read_text(encoding="utf-8")
+            self.assertIn(f"/assets/js/main.js?v={version}", html)
+            self.assertIn('aria-controls="nav"', html)
+            self.assertIn('aria-expanded="false"', html)
+
     def test_canonical_pages(self):
         for name, url in (
             ("index.html", "https://timoclaessens.nl/"),
