@@ -15,10 +15,11 @@ try {
     assert_project(count($defaults) === 4, 'Legacy four-card fallback missing.');
     assert_project($defaults[0]['style'] === 'cloud', 'Artwork style mismatch.');
 
+    // Project defaults do not depend on legacy content.json fields.
     $copy = cms_defaults();
-    $copy['project_1_title'] = 'Edited in phase 2';
+    $copy['hero_intro'] = 'Updated homepage copy';
     cms_save_content($copy);
-    assert_project(cms_read_projects()[0]['title'] === 'Edited in phase 2', 'Legacy CMS edits not imported.');
+    assert_project(cms_read_projects()[0]['title'] === 'AWS Infrastructure & Automation', 'Copy edits must not change projects.');
 
     $projects = cms_read_projects();
     $projects[0]['title'] = 'Updated title';
