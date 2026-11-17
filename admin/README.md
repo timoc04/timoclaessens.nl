@@ -64,3 +64,7 @@ The main `/admin/` content editor now separates **Save draft** from **Publish sa
 The editor uses a revision check to reject stale drafts from another tab. Publishing also verifies the live content revision from when the page was loaded. If a conflict occurs, reload and review the draft before publishing. Drafts are private server-side JSON and cannot be requested through the public API. They are not a preview feature or revision history. Existing `content.json` files, CMS accounts and project management are unaffected. Back up `content.draft.json` alongside live CMS files; do not delete it during cPanel deployments.
 
 Project management at `/admin/projects.php` **still publishes immediately**. Project drafts, previews and version history are planned separately.
+
+## Project drafts
+
+The project manager now edits a private `projects.draft.json` file in `CMS_STORAGE_DIR`. Saving a project, adding one, deleting one, or moving one changes **only the draft**, not the public `projects.json`. Use **Publish project draft** to publish the entire saved project list or **Discard project draft** to remove unpublished changes. Draft and live revisions are checked to prevent stale tabs from overwriting changes. After publication, the existing live project backup `projects.previous.json` is still maintained. Preserve `projects.draft.json` during deployments. Project edits within different cards must each be saved before publishing; unsaved form fields are not published. This is not a public preview or revision-history feature.

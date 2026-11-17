@@ -155,3 +155,7 @@ The project manager uses an optimistic revision check inside its existing file l
 ### Homepage copy drafts
 
 `/admin/` supports private drafts for Hero, About, Expertise and Contact text. **Save draft** writes `content.draft.json` outside the web root without changing the live site; **Publish saved draft** updates `content.json`, and **Discard draft** removes only the draft. Stale tab edits are rejected. Project management continues to publish immediately; drafts for projects, preview and revision history are future phases. Preserve the private draft file during deployments. Run `php admin/tests/drafts_test.php` to test this workflow.
+
+### Project drafts
+
+The project manager now saves additions, edits, removals and ordering to private `projects.draft.json` until **Publish project draft** is clicked. The public project API continues to serve only `projects.json`. The draft is preserved across sessions and deployments, with conflict checks and explicit discard. See `admin/README.md` and run `php admin/tests/project_drafts_test.php`.
