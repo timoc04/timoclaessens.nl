@@ -33,9 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!is_array($posted)) throw new InvalidArgumentException('Missing content.');
             $editable = [];
             foreach (cms_fields() as $key => $field) {
-                if ($field['section'] !== 'Projects') $editable[$key] = $posted[$key] ?? null;
+                $editable[$key] = $posted[$key] ?? null;
             }
-            $content = cms_validate_content(array_replace($content, $editable));
+            $content = cms_validate_content($editable);
             cms_content_draft_action($action, $content, $expectedDraft, $expectedLive);
         } elseif ($action === 'publish' || $action === 'discard') {
             cms_content_draft_action($action, null, $expectedDraft, $expectedLive);
@@ -63,9 +63,7 @@ if ($status === 'discarded') $notice = 'Draft discarded; published content is un
 
 $sections = [];
 foreach (cms_fields() as $key => $field) {
-    if ($field['section'] !== 'Projects') {
-        $sections[$field['section']][$key] = $field;
-    }
+    $sections[$field['section']][$key] = $field;
 }
 ?>
 <!doctype html>
