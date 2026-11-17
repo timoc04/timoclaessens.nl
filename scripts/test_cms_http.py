@@ -105,8 +105,10 @@ class CmsHttpTests(unittest.TestCase):
 
     def test_02_preview_requires_authentication(self):
         for path in ("/admin/api/preview-content.php", "/admin/api/preview-projects.php"):
-            status, _, body = self.request(path)
+            status, headers, body = self.request(path)
             self.assertEqual(status, 401)
+            self.assertIn("no-store", headers["Cache-Control"])
+            self.assertEqual(headers["X-Content-Type-Options"], "nosniff")
             self.assertEqual(json.loads(body)["error"], "Authentication required")
 
     def test_03_authenticated_draft_preview_and_publish(self):

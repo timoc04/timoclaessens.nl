@@ -1,0 +1,2 @@
+# Internal development and test files must never be served publicly.
+Require all denied
