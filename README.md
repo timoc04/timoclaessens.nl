@@ -147,3 +147,7 @@ The public portfolio has canonical URLs for the homepage and privacy page, plus 
 The `portfolio-quality.yml` workflow checks public markup, canonical metadata, sitemap contents, local asset references and JavaScript syntax. Run locally with `python3 scripts/test_site.py`, `node --check assets/js/main.js` and `node --check assets/js/projects.js`. The `cache-busting.yml` workflow also versions the dynamic project renderer and the branded 404 page assets. Deploy the latest `main` commit **after** the cache-busting workflow finishes, so the versioned references match deployed files.
 
 Production checks still required: confirm HTTPS and canonical host redirects, real HTTP 404 status, protected CMS configuration, correct CMS JSON storage outside the document root, successful project editing and a mobile/browser check. Do not remove private CMS or signage data when deploying. GitHub checks cannot verify cPanel's live configuration.
+
+### Safe CMS project editing
+
+The project manager uses an optimistic revision check inside its existing file lock to reject stale updates (HTTP 409), preventing two tabs or administrators from silently overwriting each other. Project deletion asks for confirmation in the browser. Changes still publish immediately; this is not draft publishing or full version history. See `admin/README.md` for the restore procedure.
