@@ -10,7 +10,7 @@
     if (card) templates.set(style, card.cloneNode(true));
   });
 
-  fetch('/admin/api/projects.php', { cache: 'no-store', credentials: 'omit' })
+  fetch(document.documentElement.dataset.cmsPreview === 'true' ? '/admin/api/preview-projects.php' : '/admin/api/projects.php', { cache: 'no-store', credentials: document.documentElement.dataset.cmsPreview === 'true' ? 'same-origin' : 'omit' })
     .then(response => {
       if (!response.ok) throw new Error('Projects unavailable');
       return response.json();
