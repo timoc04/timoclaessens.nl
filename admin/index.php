@@ -55,13 +55,13 @@ foreach (cms_fields() as $key => $field) {
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>Content manager | Timo Claessens</title>
-<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/icons/favicon.svg?v=f4139c4" type="image/svg+xml">
 <link rel="stylesheet" href="/admin/admin.css">
 </head>
 <body>
 <header class="admin-header">
 <div class="container topbar">
-<a class="brand" href="/"><img src="/assets/icons/favicon.svg" width="38" height="38" alt="tc. logo"> Timo Claessens <span>/ Content Manager</span></a>
+<a class="brand" href="/"><img src="/assets/icons/favicon.svg?v=f4139c4" width="38" height="38" alt="tc. logo"> Timo Claessens <span>/ Content Manager</span></a>
 <div class="header-actions">
 <a class="button secondary" href="/admin/projects.php">Manage projects</a>
 <a class="button secondary" href="/" target="_blank" rel="noopener noreferrer">View website ↗</a>
