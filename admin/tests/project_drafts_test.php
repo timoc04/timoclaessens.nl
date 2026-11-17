@@ -40,7 +40,7 @@ try {
     cms_project_draft_action('save_draft', $live, 'none', cms_projects_revision($updated));
     cms_project_draft_action('discard', null, cms_projects_revision($live), cms_projects_revision($updated));
     check_project_draft(cms_read_project_draft() === null, 'Discard failed.');
-    check_project_draft(cms_read_projects() === $updated, 'Discard changed published projects.');
+    check_project_draft(cms_read_projects() === cms_validate_projects($updated), 'Discard changed published projects.');
     echo "CMS project draft tests passed.\n";
 } finally {
     if (is_dir($directory)) {
