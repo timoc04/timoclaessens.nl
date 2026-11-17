@@ -3,7 +3,12 @@ declare(strict_types=1);
 require_once dirname(__DIR__) . '/includes/auth.php';
 require_once dirname(__DIR__) . '/includes/drafts.php';
 cms_start_session();
-cms_require_login();
+if (!cms_authenticated()) {
+    header('Content-Type: application/json; charset=utf-8');
+    http_response_code(401);
+    exit('{"error":"Authentication required"}');
+}
+$_SESSION['cms_last_activity'] = time();
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store, private, max-age=0');
 header('X-Content-Type-Options: nosniff');
