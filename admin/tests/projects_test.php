@@ -46,7 +46,7 @@ try {
     $projects[0]['title'] = 'Second version';
     cms_save_projects($projects);
     $backup = json_decode(file_get_contents($directory . '/projects.previous.json'), true, 512, JSON_THROW_ON_ERROR);
-    assert_project($backup[0]['title'] === 'Updated title', 'Previous version backup failed.');
+    assert_project($backup[0]['title'] === 'Concurrent update', 'Previous version backup failed.');
 
     $invalid = $projects;
     $invalid[0]['url'] = 'javascript:alert(1)';
