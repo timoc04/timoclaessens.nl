@@ -33,6 +33,7 @@ class BackupTests(unittest.TestCase):
                                  ["content.json", "projects.draft.json"])
             with self.assertRaises(ValueError):
                 backup.create_backup(source, source)
+            (source / "nested").mkdir()
             with self.assertRaises(ValueError):
                 backup.create_backup(source, source / "nested")
 
