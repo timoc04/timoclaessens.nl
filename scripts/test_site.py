@@ -21,6 +21,15 @@ class PortfolioChecks(unittest.TestCase):
             self.assertIn(f'data-cms="project_{i}_title"', html)
             self.assertIn(f'data-cms="project_{i}_description"', html)
 
+    def test_project_renderer_does_not_clone_fallback_cards(self):
+        source = (ROOT / "assets/js/projects.js").read_text(encoding="utf-8")
+        self.assertIn("function createCard(", source)
+        self.assertIn("grid.replaceChildren(...cards)", source)
+        self.assertNotIn("grid.children[index]", source)
+        self.assertNotIn("cloneNode(", source)
+        self.assertIn("node.textContent = value", source)
+        self.assertIn("art.innerHTML = artwork[project.style]", source)
+
     def test_authenticated_draft_preview(self):
         preview = (ROOT / "admin/preview.php").read_text(encoding="utf-8")
         self.assertIn("cms_require_login();", preview)
