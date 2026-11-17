@@ -16,7 +16,7 @@ class PortfolioChecks(unittest.TestCase):
             self.assertIn(f'data-cms="{field}"', html)
         self.assertIn('src="/assets/js/projects.js?v=', html)
         self.assertIn('src="/assets/js/main.js?v=', html)
-        self.assertEqual(html.count('<article class="project-card">'), 4)
+        self.assertEqual(len(re.findall(r'^<article class="project-card">', html, flags=re.MULTILINE)), 4)
         for i in range(1, 5):
             self.assertIn(f'data-cms="project_{i}_title"', html)
             self.assertIn(f'data-cms="project_{i}_description"', html)
