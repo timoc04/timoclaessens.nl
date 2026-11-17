@@ -15,9 +15,15 @@ try {
     exit('Projects could not be loaded. Check private storage and backups.');
 }
 
+$revision = cms_projects_revision($projects);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     cms_check_csrf();
     try {
+        $expectedRevision = $_POST['revision'] ?? null;
+        if (!is_string($expectedRevision) || !preg_match('/^[a-f0-9]{64}$/D', $expectedRevision)) {
+            throw new InvalidArgumentException('Invalid project revision. Reload the page.');
+        }
         $action = $_POST['action'] ?? '';
         $id = $_POST['id'] ?? '';
         if (!is_string($action) || !is_string($id)) throw new InvalidArgumentException('Invalid request.');
@@ -49,9 +55,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             throw new InvalidArgumentException('Invalid project action.');
         }
-        cms_save_projects($projects);
+        cms_save_projects($projects, $expectedRevision);
         header('Location: /admin/projects.php?saved=1', true, 303);
         exit;
+    } catch (DomainException $exception) {
+        http_response_code(409);
+        $error = $exception->getMessage();
     } catch (InvalidArgumentException $exception) {
         $error = $exception->getMessage();
     } catch (Throwable $exception) {
@@ -96,7 +105,7 @@ function cms_project_editor(array $project, string $action): void
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><title>Projects | Portfolio CMS</title>
 <link rel="icon" href="/assets/icons/favicon.svg?v=f4139c4" type="image/svg+xml">
-<link rel="stylesheet" href="/admin/admin.css"></head>
+<link rel="stylesheet" href="/admin/admin.css"><script defer src="/admin/projects.js"></script></head>
 <body>
 <header class="admin-header"><div class="container topbar">
 <a class="brand" href="/admin/"><img src="/assets/icons/favicon.svg?v=f4139c4" width="38" height="38" alt="tc. logo"> Timo Claessens <span>/ Project Manager</span></a>
@@ -114,6 +123,7 @@ function cms_project_editor(array $project, string $action): void
 <div class="section-heading"><h2><?= cms_escape(sprintf('%02d / %s', $position + 1, $project['title'])) ?></h2><p>Card position <?= $position + 1 ?> of <?= count($projects) ?></p></div>
 <form method="post" action="/admin/projects.php">
 <input type="hidden" name="csrf_token" value="<?= cms_escape(cms_csrf_token()) ?>">
+<input type="hidden" name="revision" value="<?= cms_escape($revision) ?>">
 <input type="hidden" name="action" value="save"><input type="hidden" name="id" value="<?= cms_escape($project['id']) ?>">
 <div class="field-grid"><?php cms_project_editor($project, 'save'); ?></div>
 <div class="project-actions"><button class="button primary" type="submit">Save project</button></div>
@@ -123,9 +133,10 @@ function cms_project_editor(array $project, string $action): void
 <?php if (($action === 'up' && $position === 0) || ($action === 'down' && $position === count($projects) - 1)) continue; ?>
 <form method="post" action="/admin/projects.php">
 <input type="hidden" name="csrf_token" value="<?= cms_escape(cms_csrf_token()) ?>">
+<input type="hidden" name="revision" value="<?= cms_escape($revision) ?>">
 <input type="hidden" name="id" value="<?= cms_escape($project['id']) ?>">
 <input type="hidden" name="action" value="<?= cms_escape($action) ?>">
-<button class="button secondary<?= $action === 'delete' ? ' danger' : '' ?>" type="submit"><?= cms_escape($label) ?></button>
+<button class="button secondary<?= $action === 'delete' ? ' danger' : '' ?>" type="submit"<?= $action === 'delete' ? ' data-confirm-delete="' . cms_escape($project['title']) . '"' : '' ?>><?= cms_escape($label) ?></button>
 </form>
 <?php endforeach; ?>
 </div></section>
@@ -134,6 +145,7 @@ function cms_project_editor(array $project, string $action): void
 <section class="panel editor-section"><div class="section-heading"><h2>Add a project</h2><p>Choose an existing artwork style. Up to 20 projects.</p></div>
 <form method="post" action="/admin/projects.php">
 <input type="hidden" name="csrf_token" value="<?= cms_escape(cms_csrf_token()) ?>">
+<input type="hidden" name="revision" value="<?= cms_escape($revision) ?>">
 <input type="hidden" name="action" value="add"><input type="hidden" name="id" value="">
 <div class="field-grid"><?php cms_project_editor(['title'=>'','description'=>'','url'=>'','tags'=>[''], 'category'=>'', 'art_label'=>'', 'style'=>'cloud'], 'add'); ?></div>
 <div class="project-actions"><button class="button primary" type="submit">Add project ↗</button></div>

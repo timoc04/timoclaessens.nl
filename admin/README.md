@@ -18,7 +18,7 @@ Existing `content.json` files from phase 1 remain compatible: missing metadata k
 
 The first visit to the project manager imports the four default cards from existing CMS text fields. Nothing is written until you save, reorder, add or delete a project. On first save, the manager writes `projects.json` in the configured private `CMS_STORAGE_DIR`. Later saves create `projects.previous.json`, containing the immediately preceding version. Preserve both files during deployments. For manual rollback, back up the current file and restore `projects.previous.json` to `projects.json` in the private storage directory. This backup is **only one version deep**, not a full revision history. Old project text fields remain in `content.json` for backwards compatibility, but after project management is activated, edit project data only in `/admin/projects.php`.
 
-Project changes publish immediately. There is not yet a draft/preview workflow or image upload library. Visitors without JavaScript, and some crawlers, still see the original static cards.
+Project changes publish immediately. Project deletion now requires browser confirmation. The manager also checks a project-list revision under an exclusive file lock before saving: if another tab or administrator changed projects since you loaded the page, the stale save is rejected with HTTP 409. Refresh before making a new edit; copy any unsaved text first. This prevents silent overwrites, but does not provide drafts, preview or a full revision history. There is not yet an image upload library. Visitors without JavaScript, and some crawlers, still see the original static cards.
 
 ## Configure on Junda/cPanel (required before login)
 
