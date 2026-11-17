@@ -67,7 +67,7 @@ class PortfolioChecks(unittest.TestCase):
         self.assertIn("prefers-reduced-motion: reduce", css)
         import hashlib
         raw = (ROOT / "assets/css/style.css").read_bytes()
-        version = hashlib.sha1(("blob " + str(len(raw)) + "\\0").encode() + raw).hexdigest()[:7]
+        version = hashlib.sha1(("blob " + str(len(raw)) + "\0").encode() + raw).hexdigest()[:7]
         for name in ("index.html", "privacy/index.html", "404.html"):
             html = (ROOT / name).read_text(encoding="utf-8")
             if "/assets/css/style.css" in html:
