@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta name="robots" content="noindex,nofollow">
 <title>Sign in | Portfolio CMS</title>
 <link rel="icon" href="/assets/icons/favicon.svg?v=f4139c4" type="image/svg+xml">
-<link rel="stylesheet" href="/admin/admin.css">
+<link rel="stylesheet" href="/admin/admin.css?v=cf16eb5f">
 </head>
 <body>
 <main class="login-shell">
