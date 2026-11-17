@@ -92,6 +92,27 @@ class PortfolioChecks(unittest.TestCase):
             self.assertIn('aria-controls="nav"', html)
             self.assertIn('aria-expanded="false"', html)
 
+    def test_lighthouse_reported_text_contrast(self):
+        """Guard the three foreground colours flagged by the live audit."""
+        css = (ROOT / "assets/css/style.css").read_text(encoding="utf-8")
+        def contrast(foreground, background):
+            def luminance(hex_colour):
+                rgb = [int(hex_colour[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+                linear = [v / 12.92 if v <= 0.04045 else ((v + 0.055) / 1.055) ** 2.4 for v in rgb]
+                return sum(c * weight for c, weight in zip(linear, (0.2126, 0.7152, 0.0722)))
+            light, dark = sorted((luminance(foreground), luminance(background)), reverse=True)
+            return (light + 0.05) / (dark + 0.05)
+
+        background = "#f6f7f5"
+        self.assertIn("--muted:#617067;", css)
+        for selector in (".hero-footnote", ".footer-content p"):
+            import re
+            rule = re.search(re.escape(selector) + r"\\s*\\{([^}]+)\\}", css)
+            self.assertIsNotNone(rule, selector)
+            self.assertIn("color:#617067", rule.group(1))
+        for foreground in ("#617067",):
+            self.assertGreaterEqual(contrast(foreground, background), 4.5)
+
     def test_canonical_pages(self):
         for name, url in (
             ("index.html", "https://timoclaessens.nl/"),
