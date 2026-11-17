@@ -29,7 +29,7 @@ const cmsElements = document.querySelectorAll('[data-cms]');
 const cmsLinks = document.querySelectorAll('[data-cms-url]');
 const cmsTags = document.querySelectorAll('[data-cms-tags]');
 if (cmsElements.length) {
-  fetch('/admin/api/content.php', { cache: 'no-store', credentials: 'omit' })
+  fetch(document.documentElement.dataset.cmsPreview === 'true' ? '/admin/api/preview-content.php' : '/admin/api/content.php', { cache: 'no-store', credentials: document.documentElement.dataset.cmsPreview === 'true' ? 'same-origin' : 'omit' })
     .then(response => {
       if (!response.ok) throw new Error('CMS content unavailable');
       return response.json();
