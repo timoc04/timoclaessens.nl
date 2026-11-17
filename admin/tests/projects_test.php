@@ -30,6 +30,19 @@ try {
     cms_save_projects($projects);
     assert_project(cms_read_projects() === cms_validate_projects($projects), 'Saved project list does not match.');
 
+    $revision = cms_projects_revision($projects);
+    $projects[0]['title'] = 'Concurrent update';
+    cms_save_projects($projects, $revision);
+    $stale = $revision;
+    $revision = cms_projects_revision($projects);
+    $outdated = $projects;
+    $outdated[0]['title'] = 'Stale overwrite';
+    try {
+        cms_save_projects($outdated, $stale);
+        throw new RuntimeException('Stale project update was accepted.');
+    } catch (DomainException $expected) {}
+    assert_project(cms_read_projects() === cms_validate_projects($projects), 'Stale update overwrote data.');
+
     $projects[0]['title'] = 'Second version';
     cms_save_projects($projects);
     $backup = json_decode(file_get_contents($directory . '/projects.previous.json'), true, 512, JSON_THROW_ON_ERROR);
