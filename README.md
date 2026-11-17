@@ -151,3 +151,7 @@ Production checks still required: confirm HTTPS and canonical host redirects, re
 ### Safe CMS project editing
 
 The project manager uses an optimistic revision check inside its existing file lock to reject stale updates (HTTP 409), preventing two tabs or administrators from silently overwriting each other. Project deletion asks for confirmation in the browser. Changes still publish immediately; this is not draft publishing or full version history. See `admin/README.md` for the restore procedure.
+
+### Homepage copy drafts
+
+`/admin/` supports private drafts for Hero, About, Expertise and Contact text. **Save draft** writes `content.draft.json` outside the web root without changing the live site; **Publish saved draft** updates `content.json`, and **Discard draft** removes only the draft. Stale tab edits are rejected. Project management continues to publish immediately; drafts for projects, preview and revision history are future phases. Preserve the private draft file during deployments. Run `php admin/tests/drafts_test.php` to test this workflow.
