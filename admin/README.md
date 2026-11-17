@@ -68,3 +68,7 @@ Project management at `/admin/projects.php` **still publishes immediately**. Pro
 ## Project drafts
 
 The project manager now edits a private `projects.draft.json` file in `CMS_STORAGE_DIR`. Saving a project, adding one, deleting one, or moving one changes **only the draft**, not the public `projects.json`. Use **Publish project draft** to publish the entire saved project list or **Discard project draft** to remove unpublished changes. Draft and live revisions are checked to prevent stale tabs from overwriting changes. After publication, the existing live project backup `projects.previous.json` is still maintained. Preserve `projects.draft.json` during deployments. Project edits within different cards must each be saved before publishing; unsaved form fields are not published. This is not a public preview or revision-history feature.
+
+### Draft preview
+
+Use **Preview drafts** from either CMS editor to open `/admin/preview.php`. The authenticated, no-store, noindex page reuses the real homepage layout and loads unpublished content and project drafts through private, session-protected read-only endpoints. The public homepage and public APIs continue to show published content. Preview only reflects **saved** drafts, not unsaved form edits. The preview has a persistent unpublished banner. Sign in again if your CMS session expires; never share preview links as public links.
