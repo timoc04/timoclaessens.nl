@@ -28,7 +28,7 @@ try {
         'category' => 'WEB', 'art_label' => 'NEW WORK', 'style' => 'signage',
     ];
     cms_save_projects($projects);
-    assert_project(cms_read_projects() === $projects, 'Saved project list does not match.');
+    assert_project(cms_read_projects() === cms_validate_projects($projects), 'Saved project list does not match.');
 
     $projects[0]['title'] = 'Second version';
     cms_save_projects($projects);
@@ -56,7 +56,7 @@ try {
         throw new RuntimeException('Empty tag accepted.');
     } catch (InvalidArgumentException $expected) {}
 
-    assert_project(cms_read_projects() === $projects, 'Invalid project overwrote stored data.');
+    assert_project(cms_read_projects() === cms_validate_projects($projects), 'Invalid project overwrote stored data.');
     file_put_contents($directory . '/projects.json', '{invalid');
     try {
         cms_read_projects();
