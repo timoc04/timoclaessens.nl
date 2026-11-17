@@ -10,6 +10,8 @@ The portfolio is a lightweight HTML/CSS/JavaScript site with an optional PHP con
 .
 ├── .github/workflows/
 │   ├── cache-busting.yml       # Refresh versioned asset references and icons
+│   ├── portfolio-cms.yml       # CMS PHP and JSON regression checks
+│   ├── portfolio-quality.yml   # Static page, SEO and JS checks
 │   └── signage-security.yml    # PHP lint, authentication and settings tests
 ├── assets/
 │   ├── css/style.css           # Portfolio styles
@@ -42,6 +44,8 @@ The portfolio is a lightweight HTML/CSS/JavaScript site with an optional PHP con
 │   ├── README.md               # Signage setup and operation
 │   └── SECURITY.md             # Security rollout and verification notes
 ├── scripts/version_assets.py   # Content-based asset URL versioning
+├── scripts/test_site.py        # Public page regression tests
+├── robots.txt / sitemap.xml    # Search engine discovery
 ├── site.webmanifest            # Portfolio home-screen metadata
 └── README.md
 ```
@@ -62,9 +66,9 @@ Then visit `http://localhost:8000`. This previews **only the static portfolio**;
 
 `assets/icons/favicon.svg` is the shared logo. The cache-busting workflow generates `apple-touch-icon.png`, `icon-192.png` and `icon-512.png` from it. Edit the SVG, not the generated PNGs. The portfolio and signage each have web manifests.
 
-## Portfolio CMS (phase 1)
+## Portfolio CMS
 
-A separate, optional PHP CMS at `/admin/` can edit the homepage introduction, About text, selected project titles, descriptions, URLs and technology tags, expertise introduction and contact introduction. It keeps the existing static HTML as a fallback and loads published plain-text changes from `/admin/api/content.php`. It does **not** share signage accounts or configuration.
+A separate, optional PHP CMS at `/admin/` edits Hero, About, Expertise and Contact text. Project titles, descriptions, URLs, technology tags and ordering are managed separately in `/admin/projects.php`. It keeps the existing static HTML as a fallback and loads published plain-text changes from `/admin/api/content.php`. It does **not** share signage accounts or configuration.
 
 **Server-side setup is required before the CMS works:** create an untracked `admin/config.php` from `admin/config.example.php`, set a password-hashed account and a private writable storage directory outside `public_html`. See [CMS installation and safety notes](admin/README.md). Never commit real credentials or delete the private CMS storage during cPanel deployments. The project manager at `/admin/projects.php` supports adding, editing, deleting and ordering up to 20 projects with predefined artwork styles. The project data lives in private `projects.json` (plus `projects.previous.json` backup), outside Git and the document root. It does not yet support uploaded images, draft publishing or server-side SEO rendering.
 
@@ -135,3 +139,11 @@ GitHub: [timoc04](https://github.com/timoc04)
 © Timo Claessens. All rights reserved.
 
 **CMS editing locations:** `/admin/` edits non-project homepage text; `/admin/projects.php` exclusively manages projects. Legacy project keys in private `content.json` are preserved for compatibility, not shown in the main editor.
+
+## Site quality and search visibility
+
+The public portfolio has canonical URLs for the homepage and privacy page, plus a minimal `robots.txt` and `sitemap.xml`. These files help discovery but do not control access: `/admin/` is protected by PHP authentication and Apache rules, **not** by `robots.txt`. Only actual public pages belong in the sitemap.
+
+The `portfolio-quality.yml` workflow checks public markup, canonical metadata, sitemap contents, local asset references and JavaScript syntax. Run locally with `python3 scripts/test_site.py`, `node --check assets/js/main.js` and `node --check assets/js/projects.js`. The `cache-busting.yml` workflow also versions the dynamic project renderer and the branded 404 page assets. Deploy the latest `main` commit **after** the cache-busting workflow finishes, so the versioned references match deployed files.
+
+Production checks still required: confirm HTTPS and canonical host redirects, real HTTP 404 status, protected CMS configuration, correct CMS JSON storage outside the document root, successful project editing and a mobile/browser check. Do not remove private CMS or signage data when deploying. GitHub checks cannot verify cPanel's live configuration.
