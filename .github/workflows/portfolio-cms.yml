@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'admin/**'
+      - 'scripts/backup_cms.py'
+      - 'scripts/test_backup_cms.py'
       - 'index.html'
       - 'assets/js/main.js'
       - 'assets/js/projects.js'
@@ -45,6 +47,8 @@ jobs:
         run: php admin/tests/project_drafts_test.php
       - name: CMS HTTP integration checks
         run: python3 scripts/test_cms_http.py
+      - name: CMS backup safety checks
+        run: python3 scripts/test_backup_cms.py
       - name: Check JavaScript syntax
         run: |
           node --check assets/js/main.js
