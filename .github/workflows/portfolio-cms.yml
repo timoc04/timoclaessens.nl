@@ -35,6 +35,8 @@ jobs:
           find admin -type f -name '*.php' -print0 | xargs -0 -n1 php -l
       - name: CMS content regression checks
         run: php admin/tests/content_test.php
+      - name: CMS revision validation checks
+        run: php admin/tests/revisions_test.php
       - name: Project storage regression checks
         run: php admin/tests/projects_test.php
       - name: Homepage draft regression checks
