@@ -72,3 +72,22 @@ The project manager now edits a private `projects.draft.json` file in `CMS_STORA
 ### Draft preview
 
 Use **Preview drafts** from either CMS editor to open `/admin/preview.php`. The authenticated, no-store, noindex page reuses the real homepage layout and loads unpublished content and project drafts through private, session-protected read-only endpoints. The public homepage and public APIs continue to show published content. Preview only reflects **saved** drafts, not unsaved form edits. The preview has a persistent unpublished banner. Sign in again if your CMS session expires; never share preview links as public links.
+
+
+## Private CMS backup and recovery
+
+The repository includes `scripts/backup_cms.py`, a manual, dependency-free backup utility. It reads only the CMS JSON files (`content.json`, `content.draft.json`, `projects.json`, `projects.draft.json`, `projects.previous.json`) and writes a timestamped ZIP containing the files that actually exist plus a manifest. It deliberately excludes `admin/config.php`, password hashes, login-rate-limit records and lock files. **Back up `admin/config.php` separately using a secure, access-controlled method.**
+
+On Junda/cPanel, use Terminal or SSH (if enabled), and replace the example absolute paths with your own:
+
+```bash
+mkdir -p /home/USERNAME/portfolio-cms-backups
+chmod 700 /home/USERNAME/portfolio-cms-backups
+python3 scripts/backup_cms.py \
+  --source /home/USERNAME/portfolio-cms-private \
+  --destination /home/USERNAME/portfolio-cms-backups
+```
+
+Both paths must be private and outside `public_html`. The script refuses to save archives inside the repository directory, rejects symlinked CMS files, validates JSON and writes ZIP files with owner-only permissions. It **does not schedule backups** or copy them off-server. For real disaster recovery, download encrypted copies to separate storage and configure retention and a schedule using your hosting backup facility or a controlled cron job.
+
+To restore, first take a fresh backup, stop CMS edits, inspect the ZIP manifest and extract only the needed JSON files into the configured private `CMS_STORAGE_DIR`. Keep file permissions private and confirm the public APIs and CMS editor afterwards. Do not extract an archive into `public_html`, and do not blindly overwrite newer published content. Test recovery on a staging copy before relying on it.
