@@ -963,3 +963,21 @@ h2 {
   }
 
 }
+
+
+/* Visible keyboard focus across the portfolio and privacy pages. */
+:where(a, button):focus-visible {
+  outline:3px solid var(--green);
+  outline-offset:4px;
+}
+
+:where(.btn-primary, .visual-core):focus-visible {
+  outline-color:#fff;
+}
+
+/* Respect users who request less movement (including smooth scrolling). */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior:auto;
+  }
+}
